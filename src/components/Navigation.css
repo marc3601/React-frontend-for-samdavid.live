@@ -1,0 +1,23 @@
+.main_logo {
+  width: 100px;
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+  height: 100%;
+  align-items: center;
+  text-align: center;
+}
+
+.menu .menu_item {
+  flex-basis: 50%;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+}
+
+.menu .menu_item:hover {
+  background-color: red;
+ 
+}
