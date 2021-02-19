@@ -1,0 +1,18 @@
+#bgc_container {
+  background-image: url("../assets/main.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+
+.custom_btn {
+  border-radius: 29px;
+  padding-left: 4rem;
+  padding-right: 4rem;
+}
+
+@media (max-width: 500px) {
+  .main_heading {
+    font-size: 3.5rem;
+  }
+}

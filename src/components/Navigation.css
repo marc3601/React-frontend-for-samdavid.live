@@ -1,5 +1,5 @@
 .main_logo {
-  width: 100px;
+  width: 60px;
 }
 
 .menu {
@@ -21,3 +21,14 @@
   background-color: red;
  
 }
+
+/* Nav styling */
+
+.black_nav {
+  background-color: black !important;
+}
+
+.responsive-navbar-nav {
+  background-color: brown;
+}
+
