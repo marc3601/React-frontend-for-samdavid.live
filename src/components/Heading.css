@@ -1,18 +1,48 @@
 #bgc_container {
   background-image: url("../assets/main.jpg");
   background-size: cover;
-  background-position: center;
-  height: 100vh;
+  background-position: top;
+  min-height: 60vh;
+  position: relative;
 }
 
 .custom_btn {
   border-radius: 29px;
   padding-left: 4rem;
   padding-right: 4rem;
+  margin-top: 10vh;
+  position: relative;
+  z-index: 100;
 }
+
+.custom_desc {
+  font-size: 1.5rem;
+}
+
+.cover {
+  position: absolute;
+  background-image: url("../assets/cover.svg");
+  bottom: -1px;
+  height: 2.5vw;
+  z-index: 10;
+  width: 100%;
+}
+
+
 
 @media (max-width: 500px) {
   .main_heading {
     font-size: 3.5rem;
   }
+  #bgc_container {
+    min-height: 90vh;
+  }
+}
+
+@media (orientation: landscape) {
+  .custom_btn {
+    margin-top: 5vh;
+  
+  }
+  
 }

@@ -1,0 +1,17 @@
+.about {
+    background-color: white;
+}
+
+.custom_h2 {
+    font-size: 3.5rem;
+}
+
+@media (max-width: 500px) {
+    .about {
+        text-align: center;
+        padding: 25px;
+    }
+    .custom_h2 {
+        font-size: 3rem;
+    }
+  }

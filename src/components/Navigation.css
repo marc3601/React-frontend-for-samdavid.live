@@ -19,7 +19,6 @@
 
 .menu .menu_item:hover {
   background-color: red;
- 
 }
 
 /* Nav styling */
@@ -32,3 +31,12 @@
   background-color: brown;
 }
 
+.nav_element {
+  color: white;
+  padding: 10px;
+}
+.nav_element:hover {
+  background: #dc3545;
+  color: white;
+  text-decoration: none;
+}
