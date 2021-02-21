@@ -11,6 +11,7 @@ const Login = () => {
   const history = useHistory();
   const { login } = useAuth();
 
+
   async function handleSubmit(e) {
     e.preventDefault();
     // validation here
@@ -19,7 +20,7 @@ const Login = () => {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      history.push("/admin")
+      history.push("/admin");
     } catch {
       setLoading(false);
       return setError("Failed to log in");
@@ -31,7 +32,7 @@ const Login = () => {
         <Col
           className="form_col mx-auto p-5"
           xs={10}
-          sm={8}
+          sm={9}
           md={6}
           lg={5}
           xl={4}
@@ -68,7 +69,7 @@ const Login = () => {
             </Button>
           </Form>
           {error && (
-            <Alert className="mt-3" variant="danger">
+            <Alert className="mt-3 text-center" variant="danger">
               {error}
             </Alert>
           )}

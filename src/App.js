@@ -8,13 +8,12 @@ import Footer from "./components/Footer";
 import Home from "./views/Home";
 import Music from "./views/Music";
 import Services from "./views/Services";
-import Login from "./views/Login";
 import Admin from "./views/Admin";
 import PrivateRoute from "./views/PrivateRoute";
+import LoginRender from "./views/LoginRender";
 
 function App() {
   const [width, setWidth] = useState(null);
-  //const [auth, setAuth] = useState(false);
 
   useEffect(() => {
     window.addEventListener("load", () => {
@@ -36,8 +35,8 @@ function App() {
             </Route>
             <Route path="/music" component={Music} />
             <Route path="/services" component={Services} />
-            <Route path="/login" component={Login} />
-            <PrivateRoute exact path="/admin" component={Admin} />
+            <PrivateRoute rdr="/login" exact path="/admin" component={Admin} />
+            <LoginRender />
             <Route path="*">
               <h2 className="custom_h2 lead display-3 text-dark text-center pt-3 pb-5">
                 404 - page not found :(

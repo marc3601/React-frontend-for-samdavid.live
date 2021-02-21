@@ -1,11 +1,23 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Navbar, Nav, Image } from "react-bootstrap";
+import { Container, Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Navigation.css";
 import main_logo from "../assets/logo192.png";
+import { useAuth } from "../contexts/AuthContext";
+import { useHistory } from "react-router-dom";
 const Navigation = ({ width }) => {
   const [expanded, setExpanded] = useState(false);
+  const { currentUser, logout } = useAuth();
+  const history = useHistory();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      history.push("/login");
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <nav className="navigation">
       <Container>
@@ -49,6 +61,18 @@ const Navigation = ({ width }) => {
               >
                 Services
               </Link>
+              {currentUser && (
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    width < 992 && setExpanded(!expanded);
+                    handleLogout();
+                  }}
+                  className={width > 992 && "ml-3"}
+                >
+                  Logout
+                </Button>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Navbar>

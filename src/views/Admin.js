@@ -1,20 +1,18 @@
 import React from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
+import { Container, Image } from "react-bootstrap";
+import plc from "../assets/devel.png";
 
 const Admin = () => {
-  const { currentUser, logout } = useAuth();
-  const history = useHistory();
-  const handleLogout = async () => {
-    try {
-      await logout();
-      history.push("/login");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <Container className="text-center">
+      <h2 className="display-3  mt-3 mb-3">CMS System</h2>
+      <p className="lead">
+        Here you will be able te manage all of the website contents like images,
+        text or music.
+      </p>
+      <Image className="w-75" fluid src={plc} />
+    </Container>
+  );
 };
 
 export default Admin;
