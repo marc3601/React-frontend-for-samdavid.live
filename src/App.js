@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navigation from "./components/Navigation";
@@ -7,13 +8,14 @@ import Footer from "./components/Footer";
 import Home from "./views/Home";
 import Music from "./views/Music";
 import Services from "./views/Services";
-
 import Login from "./views/Login";
-import Dashboard from "./views/Dashboard";
-import Private from "./views/Private";
+import Admin from "./views/Admin";
+import PrivateRoute from "./views/PrivateRoute";
+
 function App() {
   const [width, setWidth] = useState(null);
-  const [auth, setAuth] = useState(!true);
+  //const [auth, setAuth] = useState(false);
+
   useEffect(() => {
     window.addEventListener("load", () => {
       setWidth(parseInt(window.innerWidth.toFixed(0)));
@@ -25,30 +27,26 @@ function App() {
 
   return (
     <Router>
-      <div className="main">
-        <Navigation width={width} />
-        <Switch>
-          <Route exact path="/">
-            <Home width={width} />
-          </Route>
-          <Route exact path="/music">
-            <Music />
-          </Route>
-          <Route exact path="/services">
-            <Services />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Private authed={auth} path="/admin" component={Dashboard} />
-          <Route path="*">
-            <h2 className="custom_h2 lead display-3 text-dark text-center pt-3 pb-5">
-              404 - page not found :(
-            </h2>
-          </Route>
-        </Switch>
-        <Footer />
-      </div>
+      <AuthProvider>
+        <div className="main">
+          <Navigation width={width} />
+          <Switch>
+            <Route exact path="/">
+              <Home width={width} />
+            </Route>
+            <Route path="/music" component={Music} />
+            <Route path="/services" component={Services} />
+            <Route path="/login" component={Login} />
+            <PrivateRoute exact path="/admin" component={Admin} />
+            <Route path="*">
+              <h2 className="custom_h2 lead display-3 text-dark text-center pt-3 pb-5">
+                404 - page not found :(
+              </h2>
+            </Route>
+          </Switch>
+          <Footer />
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

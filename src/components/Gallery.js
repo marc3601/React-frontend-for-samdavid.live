@@ -6,11 +6,14 @@ import "../assets/dist/assets/owl.theme.default.min.css";
 import img1 from "../assets/1.jpg";
 import img2 from "../assets/2.jpg";
 import img3 from "../assets/3.jpg";
+import "./Gallery.css";
 const Gallery = ({ width }) => {
   return (
     <Container
       fluid
-      className={width > 1000 ? "p-5" : width > 750 ? "p-4" : "p-3"}
+      className={`main_gallery ${
+        width > 1000 ? "p-5" : width > 750 ? "p-4" : "p-3"
+      }`}
     >
       <h2 className="custom_h2 lead display-3 text-light text-center pt-3 pb-5">
         My work
