@@ -30,13 +30,13 @@ function App() {
         <div className="main">
           <Navigation width={width} />
           <Switch>
+            <Route exact path="/music" component={Music} />
+            <Route exact path="/services" component={Services} />
+            <PrivateRoute rdr="/login" exact path="/admin" component={Admin} />
+            <Route exact path="/login" component={LoginRender} />
             <Route exact path="/">
               <Home width={width} />
             </Route>
-            <Route path="/music" component={Music} />
-            <Route path="/services" component={Services} />
-            <PrivateRoute rdr="/login" exact path="/admin" component={Admin} />
-            <LoginRender />
             <Route path="*">
               <h2 className="custom_h2 lead display-3 text-dark text-center pt-3 pb-5">
                 404 - page not found :(

@@ -3,13 +3,20 @@ import { Container } from "react-bootstrap";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import "react-jinke-music-player/assets/index.css";
 import song from "../assets/SoundHelix Song 1.mp3";
+import song2 from "../assets/Moby - Why Does My Heart Feels So Bad  (Ben-E.dit).mp3";
 import cov from "../assets/about.jpg";
 const Music = () => {
   const audioList = [
     {
       cover: cov,
+      musicSrc: song2,
+      name: "Another song here",
+      singer: "Someone",
+    },
+    {
+      cover: cov,
       musicSrc: song,
-      name: "My fisrst song played",
+      name: "Some music",
       singer: "Random singer",
     },
   ];
