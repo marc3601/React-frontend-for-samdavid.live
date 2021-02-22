@@ -24,7 +24,6 @@ const Gallery = ({ width }) => {
         lazyLoad
         loop
         margin={10}
-        nav
       >
         <div className="item">
           <Image fluid src={img1}></Image>
@@ -45,7 +44,6 @@ const Gallery = ({ width }) => {
           <Image fluid src={img3}></Image>
         </div>
       </OwlCarousel>
-      ;
     </Container>
   );
 };

@@ -1,5 +1,6 @@
 .navigation {
   background-color: black;
+  z-index: 1;
 }
 .main_logo {
   width: 60px;
@@ -28,6 +29,7 @@
 
 .black_nav {
   background-color: black !important;
+  z-index: 100;
 }
 
 .responsive-navbar-nav {
