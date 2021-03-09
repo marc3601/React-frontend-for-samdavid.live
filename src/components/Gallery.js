@@ -8,6 +8,25 @@ import img2 from "../assets/2.jpg";
 import img3 from "../assets/3.jpg";
 import "./Gallery.css";
 const Gallery = ({ width }) => {
+  const options = {
+    responsive: {
+      0: {
+        items: 1,
+      },
+      400: {
+        items: 1,
+      },
+      600: {
+        items: 1,
+      },
+      700: {
+        items: 2,
+      },
+      1000: {
+        items: 3,
+      },
+    },
+  };
   return (
     <Container
       fluid
@@ -19,11 +38,12 @@ const Gallery = ({ width }) => {
         My work
       </h2>
       <OwlCarousel
-        items={width > 1000 ? 3 : width > 750 ? 2 : 1}
+        // items={width > 1000 ? 3 : width > 750 ? 2 : 1}
         className="owl-theme"
         lazyLoad
         loop
         margin={10}
+        {...options}
       >
         <div className="item">
           <Image fluid src={img1}></Image>

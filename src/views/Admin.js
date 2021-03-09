@@ -8,13 +8,46 @@ import {
   Button,
   Row,
   ProgressBar,
+  // FormControl,
 } from "react-bootstrap";
 import plc from "../assets/devel.png";
 import axios from "axios";
+// import { storageRef, db } from "../firebase";
 const Admin = () => {
-  const [file, setFile] = useState();
-  const [progress, setProgress] = useState();
+  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
+
   const handleUpload = (e) => {
+    e.preventDefault();
+    // const time = new Date().getMilliseconds();
+    // const uploadTask = storageRef.child(`songs/${time}`).put(file);
+
+    // uploadTask.on(
+    //   "state_changed",
+    //   (snapschot) => {
+    //     const progress = Math.round(
+    //       (snapschot.bytesTransferred / snapschot.totalBytes) * 100
+    //     );
+    //     setProgress(progress);
+    //   },
+    //   (err) => {
+    //     console.log(err);
+    //   },
+    //   () => {
+    //     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+    //       db.ref(`songs/${time}`).set({
+    //         source: downloadURL,
+    //       });
+    //       try {
+    //         console.log(downloadURL);
+    //       } catch (e) {
+    //         console.log(e);
+    //       }
+    //     });
+    //     setProgress(0);
+    //   }
+    // );
+
     const data = new FormData();
     data.append("song", file);
     const config = {
@@ -29,7 +62,19 @@ const Admin = () => {
       .post("https://api-music-test.herokuapp.com/data", data, config)
       .then((res) => console.log(res));
   };
-
+  // useEffect(() => {
+  //   var storageRef = storage().ref("songs");
+  //   storageRef
+  //     .listAll()
+  //     .then(function (result) {
+  //       result.items.forEach(function (imageRef) {
+  //         console.log(imageRef);
+  //       });
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }, []);
   return (
     <Container className="text-center">
       <h2 className="display-3  mt-3 mb-3">CMS System</h2>
@@ -72,6 +117,7 @@ const Admin = () => {
                 >
                   Upload
                 </Button>
+                {/* <FormControl>dfds</FormControl> */}
               </Form>
             </Col>
           </Row>
