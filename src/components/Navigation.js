@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Navigation.css";
-import main_logo from "../assets/logo192.png";
+import main_logo from "../assets/logo.png"
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 const Navigation = ({ width }) => {
