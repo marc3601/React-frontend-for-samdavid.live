@@ -8,51 +8,66 @@ import {
   Button,
   Row,
   ProgressBar,
-  // FormControl,
+  Alert,
 } from "react-bootstrap";
 import plc from "../assets/devel.png";
 import { storageRef, db } from "../firebase";
 const Admin = () => {
   const [file, setFile] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
 
   const handleUpload = (e) => {
-    e.preventDefault();
-    const time = new Date().getMilliseconds();
-    var metadata = {
-      name: `Songify ${time}`,
-    };
+    if (file !== null && file.type === "audio/mpeg") {
+      e.preventDefault();
+      console.log(file.type);
+      setAlert(false);
+      setCompleted(false);
+      const time = new Date().getMilliseconds();
+      var metadata = {
+        name: `Songify ${time}`,
+      };
+      const uploadTask = storageRef
+        .child(`songs/${metadata.name}`)
+        .put(file, metadata);
 
-    const uploadTask = storageRef
-      .child(`songs/${metadata.name}`)
-      .put(file, metadata);
-
-    setProgress(0);
-    uploadTask.on(
-      "state_changed",
-      (snapschot) => {
-        const progress = Math.round(
-          (snapschot.bytesTransferred / snapschot.totalBytes) * 100
-        );
-        setProgress(progress);
-      },
-      (err) => {
-        console.log(err);
-      },
-      () => {
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          db.ref(`songs/${time}`).set({
-            source: downloadURL,
+      setProgress(0);
+      uploadTask.on(
+        "state_changed",
+        (snapschot) => {
+          const progress = Math.round(
+            (snapschot.bytesTransferred / snapschot.totalBytes) * 100
+          );
+          setProgress(progress);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            db.ref(`songs/${time}`).set({
+              source: downloadURL,
+            });
+            try {
+              setCompleted(true);
+            } catch (e) {
+              console.log(e);
+            }
           });
-          try {
-            console.log(downloadURL);
-          } catch (e) {
-            console.log(e);
-          }
-        });
-        uploadTask.snapshot.ref.getMetadata().then((data) => console.log(data));
+          uploadTask.snapshot.ref.getMetadata().then((data) => data);
+        }
+      );
+    } else {
+      if (file !== null && file.type !== "audio/mpeg") {
+        setAlert(true);
+        setMessage("Choose audio file.");
+      } else {
+        setAlert(true);
+        setMessage("Choose file before uploading.");
       }
-    );
+    }
   };
 
   return (
@@ -97,7 +112,12 @@ const Admin = () => {
                 >
                   Upload
                 </Button>
-                {/* <FormControl>dfds</FormControl> */}
+                <Alert className="mt-3" variant="danger" show={alert}>
+                  {message}
+                </Alert>
+                <Alert className="mt-3" variant="success" show={completed}>
+                  Upload completed
+                </Alert>
               </Form>
             </Col>
           </Row>
