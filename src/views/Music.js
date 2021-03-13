@@ -5,43 +5,50 @@ import "react-jinke-music-player/assets/index.css";
 import { storage } from "../firebase";
 
 const Music = () => {
+  
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const storageRef = storage.ref("songs");
-  const container = [];
+  let container = [];
+
+ 
   const downloadMusic = () => {
     storageRef
       .listAll()
       .then((result) => {
-        let name = "Default";
-        result.items.forEach(function (songRef) {
-          songRef.getMetadata().then((data) => name = data.name);
-          songRef
-            .getDownloadURL()
-            .then((url) => container.push({ name: name, musicSrc: url }));
-          
+        result.items.forEach((item) => {
+          Promise.all([
+            item.getMetadata().then((result) => result.name),
+            item.getDownloadURL().then((url) => url),
+          ]).then((values) => {
+            container.push({
+              name: values[0],
+              musicSrc: values[1],
+            });
+          });
         });
-      })
-      .finally(() => {
         setData(container);
       })
       .catch((error) => {
-        // Handle any errors
+        console.log(error);
       });
   };
+
+
 
   useEffect(() => {
     downloadMusic();
     setTimeout(() => {
-      setIsLoading(false);
+      setLoading(false);
     }, 500);
   }, []);
+
+  
 
   return (
     <Container>
       <h1 className="display-3 text-center text-dark">Music</h1>
-
-      {!isLoading && (
+      {!loading && (
         <ReactJkMusicPlayer
           audioLists={data}
           theme="auto"
@@ -49,6 +56,7 @@ const Music = () => {
           toogleMode={false}
           mode="full"
           delete={false}
+          responsive={false}
         />
       )}
     </Container>
