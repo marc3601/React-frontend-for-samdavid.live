@@ -11,6 +11,10 @@ import Services from "./views/Services";
 import Admin from "./views/Admin";
 import PrivateRoute from "./views/PrivateRoute";
 import LoginRender from "./views/LoginRender";
+import Category1 from "./views/categories/Category1";
+import Category2 from "./views/categories/Category2";
+import Category3 from "./views/categories/Category3";
+import Category4 from "./views/categories/Category4";
 
 function App() {
   const [width, setWidth] = useState(null);
@@ -30,10 +34,14 @@ function App() {
         <div className="main">
           <Navigation width={width} />
           <Switch>
-            <Route exact path="/music" component={Music} />
             <Route exact path="/services" component={Services} />
             <PrivateRoute rdr="/login" exact path="/admin" component={Admin} />
             <Route exact path="/login" component={LoginRender} />
+            <Route exact path="/music" component={Music} />
+            <Route exact path="/music/category1" component={Category1} />
+            <Route exact path="/music/category2" component={Category2} />
+            <Route exact path="/music/category3" component={Category3} />
+            <Route exact path="/music/category4" component={Category4} />
             <Route exact path="/">
               <Home width={width} />
             </Route>

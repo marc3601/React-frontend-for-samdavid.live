@@ -20,14 +20,13 @@ const Admin = () => {
   const [progress, setProgress] = useState(0);
 
   const handleUpload = (e) => {
-    if (file !== null && file.type === "audio/mpeg") {
+    if (file !== null && file.type === "audio/*") {
       e.preventDefault();
-      console.log(file.type);
+      const title = file.name.slice(0, file.name.length - 4);
       setAlert(false);
       setCompleted(false);
-      const time = new Date().getMilliseconds();
       var metadata = {
-        name: `Songify ${time}`,
+        name: title,
       };
       const uploadTask = storageRef
         .child(`songs/${metadata.name}`)
@@ -43,24 +42,35 @@ const Admin = () => {
           setProgress(progress);
         },
         (err) => {
-          console.log(err);
+          setProgress(0);
+          setAlert(true);
+          setMessage(err.message);
         },
         () => {
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            db.ref(`songs/${time}`).set({
-              source: downloadURL,
-            });
-            try {
+          Promise.all([
+            uploadTask.snapshot.ref.getMetadata().then((data) => {
+              db.collection("songs").doc(metadata.name).set({
+                name: data.name,
+              });
+            }),
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+              db.collection("songs").doc(metadata.name).update({
+                musicSrc: downloadURL,
+              });
+            }),
+          ])
+            .then(() => {
               setCompleted(true);
-            } catch (e) {
-              console.log(e);
-            }
-          });
-          uploadTask.snapshot.ref.getMetadata().then((data) => data);
+            })
+            .catch((err) => {
+              setProgress(0);
+              setAlert(true);
+              setMessage(err.message);
+            });
         }
       );
     } else {
-      if (file !== null && file.type !== "audio/mpeg") {
+      if (file !== null && file.type !== "audio/*") {
         setAlert(true);
         setMessage("Choose audio file.");
       } else {
