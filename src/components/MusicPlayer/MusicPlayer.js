@@ -33,7 +33,7 @@ const Input = styled.input.attrs((props) => ({
   min: 0,
   max: 100,
   step: 0.1,
-  value: props.playBack,
+  value: props.percentage,
 }))`
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -169,15 +169,14 @@ const VolumeSlider = styled.input.attrs((props) => ({
 
 const MusicPlayer = ({ playlist }) => {
   const [playIcon, setPlayIcon] = useState(true);
-  const [audioDuration, setAudioDuration] = useState("0:00");
-  const [currentTime, setCurrentTime] = useState("0:00");
-  const [playBack, setPlayBack] = useState(0);
-  const audio = useRef(null);
+  const [audioDuration, setAudioDuration] = useState("00:00");
+  const [currentTime, setCurrentTime] = useState("00:00");
+  const [percentage, setPercentage] = useState(0);
   const volume = useRef(null);
   const progress = useRef(null);
-
+  const audioRef = useRef();
   useEffect(() => {
-    audio.current.volume = volume.current.value;
+    audioRef.current.volume = volume.current.value;
   }, []);
 
   const convertAudioDuration = (convert) => {
@@ -185,6 +184,25 @@ const MusicPlayer = ({ playlist }) => {
     var seconds = "0" + Math.floor(convert - minutes * 60);
     var dur = minutes.substr(-2) + ":" + seconds.substr(-2);
     return dur;
+  };
+
+
+  const onChange = (e) => {
+    const audio = audioRef.current;
+    audio.currentTime = (audio.duration / 100) * e.target.value;
+    setPercentage(e.target.value);
+  };
+
+
+  const getCurrDuration = (e) => {
+    const percent = (
+      (e.currentTarget.currentTime / e.currentTarget.duration) *
+      100
+    ).toFixed(2);
+    const time = e.currentTarget.currentTime;
+
+    setPercentage(+percent);
+    setCurrentTime(convertAudioDuration(time.toFixed(2)));
   };
 
   return (
@@ -195,16 +213,7 @@ const MusicPlayer = ({ playlist }) => {
           <div className="total">{audioDuration}</div>
         </Timer>
         <ProgressBar>
-          <Input
-            ref={progress}
-            playBack={playBack}
-            onChange={() => {
-              // audio.current.currentTime = progress.current.value;
-              // setPlayBack(audio.current.currentTime);
-              console.log(progress.current.value);
-              setPlayBack();
-            }}
-          />
+          <Input ref={progress} percentage={percentage} onChange={onChange} />
         </ProgressBar>
         <PlayerControls>
           <Control>
@@ -216,7 +225,7 @@ const MusicPlayer = ({ playlist }) => {
               height="50px"
               width="50px"
             >
-              <title>rewind-glyph</title>
+              <title>rewind</title>
               <path
                 d="M481.76,510.43c17,0,30.24-13.78,30.24-31.36V32.93c0-17.58-13.28-31.36-30.25-31.36a32.73,32.73,0,0,0-16.3,4.49L128.61,229.12C118.54,234.93,112.53,245,112.53,256s6,21.07,16.08,26.87L465.45,505.94a32.72,32.72,0,0,0,16.3,4.49Z"
                 fill="#434040"
@@ -231,9 +240,9 @@ const MusicPlayer = ({ playlist }) => {
             onClick={() => {
               setPlayIcon(!playIcon);
               if (playIcon) {
-                audio.current.play();
+                audioRef.current.play();
               } else {
-                audio.current.pause();
+                audioRef.current.pause();
               }
             }}
           >
@@ -246,7 +255,7 @@ const MusicPlayer = ({ playlist }) => {
                 height="50px"
                 width="50px"
               >
-                <title>play-glyph</title>
+                <title>play</title>
                 <path
                   d="M60.54,512c-17.06,0-30.43-13.86-30.43-31.56V31.55C30.12,13.86,43.48,0,60.55,0A32.94,32.94,0,0,1,77,4.52L465.7,229c10.13,5.85,16.18,16,16.18,27s-6,21.2-16.18,27L77,507.48A32.92,32.92,0,0,1,60.55,512Z"
                   fill="#434040"
@@ -261,7 +270,7 @@ const MusicPlayer = ({ playlist }) => {
                 height="50px"
                 width="50px"
               >
-                <title>pause-glyph</title>
+                <title>pause</title>
                 <path
                   d="M395,512a73.14,73.14,0,0,1-73.14-73.14V73.14a73.14,73.14,0,1,1,146.29,0V438.86A73.14,73.14,0,0,1,395,512Z"
                   fill="#434040"
@@ -282,7 +291,7 @@ const MusicPlayer = ({ playlist }) => {
               height="50px"
               width="50px"
             >
-              <title>forward-glyph</title>
+              <title>forward</title>
               <path
                 d="M30.24,510.43c-17,0-30.24-13.78-30.24-31.36V32.93C0,15.35,13.28,1.57,30.25,1.57a32.73,32.73,0,0,1,16.3,4.49L383.39,229.12c10.07,5.81,16.08,15.86,16.08,26.88s-6,21.07-16.08,26.87L46.55,505.94a32.72,32.72,0,0,1-16.3,4.49Z"
                 fill="#434040"
@@ -307,7 +316,7 @@ const MusicPlayer = ({ playlist }) => {
           </VolumeIcon>
           <VolumeSlider
             ref={volume}
-            onChange={() => (audio.current.volume = volume.current.value)}
+            onChange={() => (audioRef.current.volume = volume.current.value)}
           ></VolumeSlider>
         </PlayerVolume>
         <SongTitle>{playlist[0].artist}</SongTitle>
@@ -315,21 +324,11 @@ const MusicPlayer = ({ playlist }) => {
       </Player>
       <PlayList></PlayList>
       <audio
-        ref={audio}
-        onLoadStart={() => console.log("Media load started")}
-        onTimeUpdate={() => {
-          setCurrentTime(convertAudioDuration(audio.current.currentTime));
-
-          setPlayBack(
-            (
-              (audio.current.currentTime / audio.current.duration) *
-              100
-            ).toFixed(2)
-          );
+        ref={audioRef}
+        onTimeUpdate={getCurrDuration}
+        onLoadedData={(e) => {
+          setAudioDuration(convertAudioDuration(audioRef.current.duration));
         }}
-        onLoadedMetadata={() =>
-          setAudioDuration(convertAudioDuration(audio.current.duration))
-        }
         src={playlist[0].source}
       />
     </PlayerWrapper>

@@ -9,7 +9,7 @@ const Category1 = () => {
       name: "Not Afraid",
       artist: "Eminem",
       source:
-      "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2Feminem-not-afraid-official-video?alt=media&token=9a30df89-d808-491f-8994-52eca6e6c3e1",
+      "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2F02%20-%20Fractions?alt=media&token=afe40b2d-8db4-4579-879a-047c3a553fc5",
     },
   ]);
   const [loading, setLoading] = useState(true);
