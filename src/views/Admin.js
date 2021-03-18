@@ -20,7 +20,7 @@ const Admin = () => {
   const [progress, setProgress] = useState(0);
 
   const handleUpload = (e) => {
-    if (file !== null && file.type === "audio/*") {
+    if (file !== null && file.type === "audio/mpeg") {
       e.preventDefault();
       const title = file.name.slice(0, file.name.length - 4);
       setAlert(false);
@@ -70,7 +70,7 @@ const Admin = () => {
         }
       );
     } else {
-      if (file !== null && file.type !== "audio/*") {
+      if (file !== null && file.type !== "audio/mpeg") {
         setAlert(true);
         setMessage("Choose audio file.");
       } else {

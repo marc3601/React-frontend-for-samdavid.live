@@ -6,10 +6,40 @@ import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
 const Category1 = () => {
   const [data, setData] = useState([
     {
-      name: "Not Afraid",
-      artist: "Eminem",
+      name: "Secrets (Magic Free Release)",
+      artist: "Tabba x Dj Goja",
       source:
-      "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2F02%20-%20Fractions?alt=media&token=afe40b2d-8db4-4579-879a-047c3a553fc5",
+        "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2Ftabba-x-dj-goja-secrets-magic-free-release?alt=media&token=82f5a82d-824d-4ab3-8834-9154c6d2b50c",
+    },
+    {
+      name: "Secrets (Magic Free Release)",
+      artist: "Tabba x Dj Goja",
+      source:
+        "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2Ftabba-x-dj-goja-secrets-magic-free-release?alt=media&token=82f5a82d-824d-4ab3-8834-9154c6d2b50c",
+    },
+    {
+      name: "Secrets (Magic Free Release)",
+      artist: "Tabba x Dj Goja",
+      source:
+        "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2Ftabba-x-dj-goja-secrets-magic-free-release?alt=media&token=82f5a82d-824d-4ab3-8834-9154c6d2b50c",
+    },
+    {
+      name: "Secrets (Magic Free Release)",
+      artist: "Tabba x Dj Goja",
+      source:
+        "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2Ftabba-x-dj-goja-secrets-magic-free-release?alt=media&token=82f5a82d-824d-4ab3-8834-9154c6d2b50c",
+    },
+    {
+      name: "Secrets (Magic Free Release)",
+      artist: "Tabba x Dj Goja",
+      source:
+        "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2Ftabba-x-dj-goja-secrets-magic-free-release?alt=media&token=82f5a82d-824d-4ab3-8834-9154c6d2b50c",
+    },
+    {
+      name: "Secrets (Magic Free Release)",
+      artist: "Tabba x Dj Goja",
+      source:
+        "https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/songs%2Ftabba-x-dj-goja-secrets-magic-free-release?alt=media&token=82f5a82d-824d-4ab3-8834-9154c6d2b50c",
     },
   ]);
   const [loading, setLoading] = useState(true);
