@@ -1,3 +1,4 @@
+import { logRoles } from "@testing-library/dom";
 import React, { useState } from "react";
 import {
   Container,
@@ -18,66 +19,99 @@ const Admin = () => {
   const [completed, setCompleted] = useState(false);
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(null);
 
   const handleUpload = (e) => {
-    if (file !== null && file.type === "audio/mpeg") {
-      e.preventDefault();
-      const title = file.name.slice(0, file.name.length - 4);
-      setAlert(false);
-      setCompleted(false);
-      var metadata = {
-        name: title,
-      };
-      const uploadTask = storageRef
-        .child(`songs/${metadata.name}`)
-        .put(file, metadata);
+    if (file !== null) {
+      if (
+        file.type === "audio/mpeg" ||
+        file.type === "audio/ogg" ||
+        file.type === "audio/wav"
+      ) {
+        e.preventDefault();
+        const title = file.name.slice(0, file.name.length - 4);
+        setAlert(false);
+        setCompleted(false);
+        var metadata = {
+          name: title,
+          duration: duration,
+        };
+        const uploadTask = storageRef
+          .child(`songs/${metadata.name}`)
+          .put(file, metadata);
 
-      setProgress(0);
-      uploadTask.on(
-        "state_changed",
-        (snapschot) => {
-          const progress = Math.round(
-            (snapschot.bytesTransferred / snapschot.totalBytes) * 100
-          );
-          setProgress(progress);
-        },
-        (err) => {
-          setProgress(0);
-          setAlert(true);
-          setMessage(err.message);
-        },
-        () => {
-          Promise.all([
-            uploadTask.snapshot.ref.getMetadata().then((data) => {
-              db.collection("songs").doc(metadata.name).set({
-                name: data.name,
+        setProgress(0);
+        uploadTask.on(
+          "state_changed",
+          (snapschot) => {
+            const progress = Math.round(
+              (snapschot.bytesTransferred / snapschot.totalBytes) * 100
+            );
+            setProgress(progress);
+          },
+          (err) => {
+            setProgress(0);
+            setAlert(true);
+            setMessage(err.message);
+          },
+          () => {
+            Promise.all([
+              uploadTask.snapshot.ref.getMetadata().then((data) => {
+                db.collection("songs").doc(metadata.name).set({
+                  name: data.name,
+                  duration: duration,
+                });
+              }),
+
+              uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                db.collection("songs").doc(metadata.name).update({
+                  musicSrc: downloadURL,
+                });
+              }),
+            ])
+              .then(() => {
+                setCompleted(true);
+              })
+              .catch((err) => {
+                setProgress(0);
+                setAlert(true);
+                setMessage(err.message);
               });
-            }),
-            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-              db.collection("songs").doc(metadata.name).update({
-                musicSrc: downloadURL,
-              });
-            }),
-          ])
-            .then(() => {
-              setCompleted(true);
-            })
-            .catch((err) => {
-              setProgress(0);
-              setAlert(true);
-              setMessage(err.message);
-            });
-        }
-      );
+          }
+        );
+      }
     } else {
-      if (file !== null && file.type !== "audio/mpeg") {
+      if (file == null || file.type !== "audio/mpeg") {
         setAlert(true);
-        setMessage("Choose audio file.");
-      } else {
-        setAlert(true);
-        setMessage("Choose file before uploading.");
+        setMessage("Choose audio file before uploading.");
       }
     }
+  };
+
+  const getFileDuration = (file) => {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      audioContext.decodeAudioData(event.target.result, function (buffer) {
+        const duration = buffer.duration;
+        setDuration(convertAudioDuration(duration));
+        return duration;
+      });
+    };
+    reader.onerror = function (event) {
+      console.error("An error ocurred reading the file: ", event);
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  const convertAudioDuration = (convert) => {
+    var minutes = "0" + Math.floor(convert / 60);
+    var seconds = "0" + Math.floor(convert - minutes * 60);
+    var dur = minutes.substr(-2) + ":" + seconds.substr(-2);
+    return dur;
   };
 
   return (
@@ -111,6 +145,11 @@ const Admin = () => {
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setFile(file);
+                      if (file.type !== null) {
+                        if (file.type === "audio/mpeg") {
+                          getFileDuration(file);
+                        }
+                      }
                     }}
                   />
                   <ProgressBar className="mt-5" now={progress} />

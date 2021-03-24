@@ -10,7 +10,7 @@ const Footer = () => {
         <Row>
           <Col className="text-right border-right">
             <Image fluid className="main_logo" src={main_logo} alt="" />
-            <p className="pt-2">DJ SAM DAVID</p>
+            <p className="pt-2">SAM DAVID</p>
           </Col>
           <Col>
             <h4 className="display-5">Contact</h4>

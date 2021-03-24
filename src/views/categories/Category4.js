@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import ReactJkMusicPlayer from "react-jinke-music-player";
-import "react-jinke-music-player/assets/index.css";
 import { db } from "../../firebase";
-
-
+import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
 
 const Category4 = () => {
   const [data, setData] = useState([]);
@@ -32,17 +29,7 @@ const Category4 = () => {
   return (
     <Container>
       <h5 className="display-4 text-center text-dark">Category 4</h5>
-      {!loading && (
-        <ReactJkMusicPlayer
-          audioLists={data}
-          theme="auto"
-          autoPlay={false}
-          toogleMode={false}
-          mode="full"
-          delete={false}
-          responsive={false}
-        />
-      )}
+      {<MusicPlayer playlist={data} load={loading} />}
     </Container>
   );
 };
