@@ -23,13 +23,23 @@ const Category1 = () => {
   };
 
   useEffect(() => {
-    downloadMusic("songs");
+    downloadMusic("remixes");
+   
   }, []);
 
   return (
-    <Container>
-      <h5 className="display-4 text-center text-dark mb-4">Category 1</h5>
-      {<MusicPlayer playlist={data} load={loading} />}
+    <Container sm={12}>
+      <h5 className="display-4 font-weight-bold text-center text-dark mb-4">
+        Remixes
+      </h5>
+      {
+        <MusicPlayer
+          playlist={data}
+          load={loading}
+          desc={{ title: "Remixes", desc: "Description here" }}
+          W
+        />
+      }
     </Container>
   );
 };

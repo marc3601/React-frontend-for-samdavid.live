@@ -3,8 +3,8 @@ import React from "react";
 const TrackLoading = () => {
   return (
     <svg
-      width="50px"
-      height="50px"
+      width="40px"
+      height="40px"
       viewBox="0 0 100 100"
       preserveAspectRatio="xMidYMid"
     >

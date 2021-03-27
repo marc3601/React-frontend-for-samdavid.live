@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Image, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Navigation.css";
-import main_logo from "../assets/logo.png"
+import main_logo from "../assets/logo.png";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 const Navigation = ({ width }) => {
@@ -57,9 +57,9 @@ const Navigation = ({ width }) => {
               <Link
                 onClick={() => width < 992 && setExpanded(!expanded)}
                 className="nav_element"
-                to="/services"
+                to="/gallery"
               >
-                Services
+                Gallery
               </Link>
               {currentUser && (
                 <Button

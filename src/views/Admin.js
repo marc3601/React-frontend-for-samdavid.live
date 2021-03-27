@@ -2,7 +2,6 @@ import { logRoles } from "@testing-library/dom";
 import React, { useState } from "react";
 import {
   Container,
-  Image,
   Card,
   Col,
   Form,
@@ -11,7 +10,6 @@ import {
   ProgressBar,
   Alert,
 } from "react-bootstrap";
-import plc from "../assets/devel.png";
 import { storageRef, db } from "../firebase";
 const Admin = () => {
   const [file, setFile] = useState(null);
@@ -20,6 +18,7 @@ const Admin = () => {
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(null);
+  const [category, setCategory] = useState("remixes");
 
   const handleUpload = (e) => {
     if (file !== null) {
@@ -37,7 +36,7 @@ const Admin = () => {
           duration: duration,
         };
         const uploadTask = storageRef
-          .child(`songs/${metadata.name}`)
+          .child(`${category}/${metadata.name}`)
           .put(file, metadata);
 
         setProgress(0);
@@ -57,14 +56,14 @@ const Admin = () => {
           () => {
             Promise.all([
               uploadTask.snapshot.ref.getMetadata().then((data) => {
-                db.collection("songs").doc(metadata.name).set({
+                db.collection(category).doc(metadata.name).set({
                   name: data.name,
                   duration: duration,
                 });
               }),
 
               uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                db.collection("songs").doc(metadata.name).update({
+                db.collection(category).doc(metadata.name).update({
                   musicSrc: downloadURL,
                 });
               }),
@@ -88,9 +87,8 @@ const Admin = () => {
     }
   };
 
-  const getFileDuration = (file) => {
+  const getFileDuration = (input) => {
     const reader = new FileReader();
-
     reader.onload = function (event) {
       const audioContext = new (window.AudioContext ||
         window.webkitAudioContext)();
@@ -104,7 +102,7 @@ const Admin = () => {
       console.error("An error ocurred reading the file: ", event);
     };
 
-    reader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(input);
   };
 
   const convertAudioDuration = (convert) => {
@@ -114,17 +112,32 @@ const Admin = () => {
     return dur;
   };
 
+  const setUserChoice = (choice) => {
+    switch (choice) {
+      case "0":
+        setCategory("remixes");
+        break;
+      case "1":
+        setCategory("dj-sets");
+        break;
+      case "2":
+        setCategory("original-music");
+        break;
+      case "3":
+        setCategory("projects");
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <Container className="text-center">
-      <h2 className="display-3  mt-3 mb-3">CMS System</h2>
-      <p className="lead">
-        Here you will be able te manage all of the website contents like images,
-        text or music.
-      </p>
-      <Image className="w-75" fluid src={plc} />
-      <Card className="mt-3 mb-3 w-100 mx-auto" lg={4}>
-        <Card.Title className="text-center mt-3 mb-3">
-          Upload form for testing purposes.
+      <h2 className="display-4  mt-3 mb-4">Content management</h2>
+      <p className="lead">Music upload system</p>
+      <Card className="mt-5 mb-3 ">
+        <Card.Title className="text-center mt-3 mb-3" md={4}>
+          Choose category and file to upload.
         </Card.Title>
         <Card.Body>
           <Row>
@@ -136,19 +149,31 @@ const Admin = () => {
                 encType="multipart/form-data"
               >
                 <Form.Group>
+                  <Form.Control
+                    as="select"
+                    className="mr-sm-2"
+                    label="Choose category."
+                    id="inlineFormCustomSelect"
+                    custom
+                    onChange={(e) => setUserChoice(e.target.value)}
+                  >
+                    <option value="0">Remixes</option>
+                    <option value="1">Dj sets</option>
+                    <option value="2">Original music</option>
+                    <option value="3">Projects</option>
+                  </Form.Control>
                   <Form.File
                     type="file"
                     name="song"
                     id="song"
-                    label="Example file input"
+                    label="Choose audio file to upload."
                     required
+                    className="mt-4"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setFile(file);
                       if (file.type !== null) {
-                        if (file.type === "audio/mpeg") {
-                          getFileDuration(file);
-                        }
+                        getFileDuration(file);
                       }
                     }}
                   />

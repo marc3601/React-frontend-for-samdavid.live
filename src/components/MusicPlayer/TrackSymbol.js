@@ -5,9 +5,9 @@ const TrackSymbol = () => {
     <svg
       id="Capa_1"
       enableBackground="new 0 0 512.077 512.077"
-      height="50"
+      height="40px"
       viewBox="0 0 512.077 512.077"
-      width="50"
+      width="40px"
       xmlns="http://www.w3.org/2000/svg"
     >
       <g>

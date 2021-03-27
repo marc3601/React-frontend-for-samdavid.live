@@ -18,10 +18,10 @@ const Music = () => {
           <Card>
             <Link
               className="overflow-hidden text-center"
-              to="/music/category1"
+              to="/music/remix"
             >
               <h3 className="position-relative top-50 start-100 translate-middle text-dark">
-                Category 1
+                Remix
               </h3>
               <Image fluid src={cat1} />
             </Link>
@@ -29,10 +29,10 @@ const Music = () => {
           <Card>
             <Link
               className="overflow-hidden text-center"
-              to="/music/category2"
+              to="/music/original-music"
             >
               <h3 className="position-relative top-50 start-100 translate-middle text-dark">
-                Category 2
+                Original music
               </h3>
               <Image fluid src={cat2} />
             </Link>
@@ -40,17 +40,17 @@ const Music = () => {
         </Col>
         <Col xl={6} lg={6}>
           <Card>
-            <Link className="overflow-hidden text-center" to="/music/category3">
+            <Link className="overflow-hidden text-center" to="/music/dj-sets">
             <h3 className="position-relative top-50 start-100 translate-middle text-dark">
-                Category 3
+                Dj sets
               </h3>
               <Image fluid src={cat3} />
             </Link>
           </Card>
           <Card>
-            <Link className="overflow-hidden text-center" to="/music/category4">
+            <Link className="overflow-hidden text-center" to="/music/projects">
             <h3 className="position-relative top-50 start-100 translate-middle text-dark">
-                Category 4
+                Projects
               </h3>
               <Image fluid src={cat4} />
             </Link>

@@ -5,8 +5,8 @@ const Equilizer = ({ playing }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.0"
-      width="50px"
-      height="50px"
+      width="40px"
+      height="40px"
       viewBox="0 0 128 44"
     >
       <g>

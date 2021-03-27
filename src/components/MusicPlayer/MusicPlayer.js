@@ -5,10 +5,279 @@ import PlayButton from "./PlayButton";
 import ForwardButton from "./ForwardButton";
 import PauseButton from "./PauseButton";
 import VolumeLogo from "./VolumeLogo";
+import MutedLogo from "./MutedLogo";
 import TrackSymbol from "./TrackSymbol";
 import Equilizer from "./Equilizer";
 import TrackLoading from "./TrackLoading";
 import RewindButton from "./RewindButton";
+
+const MusicPlayer = ({ playlist, load, desc }) => {
+  const [playIcon, setPlayIcon] = useState(true);
+  const [audioDuration, setAudioDuration] = useState("00:00");
+  const [currentTime, setCurrentTime] = useState("00:00");
+  const [percentage, setPercentage] = useState(0);
+  const [alert, setAlert] = useState(true);
+  const [activeTrackID, setActiveTrackID] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const volume = useRef(null);
+  const progress = useRef(null);
+  const audioRef = useRef();
+  useEffect(() => {
+    audioRef.current.volume = volume.current.value;
+  }, []);
+
+  // Temporary solution to the NaN problem with percentage causing search input range thumb to stay in the middle.
+  useEffect(() => {
+    if (isNaN(percentage)) {
+      setPercentage(0);
+    }
+  }, [percentage]);
+
+  // Converts audio duration in seconds to 00:00 format.
+  const convertAudioDuration = (convert) => {
+    var minutes = "0" + Math.floor(convert / 60);
+    var seconds = "0" + Math.floor(convert - minutes * 60);
+    var dur = minutes.substr(-2) + ":" + seconds.substr(-2);
+    return dur;
+  };
+
+  // Allows user to seek through the audio track.
+  const onChange = (e) => {
+    const audio = audioRef.current;
+    if (!loading) {
+      audio.currentTime = (audio.duration / 100) * e.target.value;
+      setPercentage(e.target.value);
+    }
+  };
+
+  // Sets the value of the current time of the track to be displayed in the player.
+  const getCurrDuration = (e) => {
+    const percent = (
+      (e.currentTarget.currentTime / e.currentTarget.duration) *
+      100
+    ).toFixed(2);
+    const time = e.currentTarget.currentTime;
+
+    setPercentage(+percent);
+    setCurrentTime(convertAudioDuration(time.toFixed(2)));
+  };
+
+  // Handles track choice with the click or touch.
+  const handleTrackChoice = (e) => {
+    setActiveTrackID(parseInt(e.currentTarget.id));
+
+    const playPromise = audioRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then((_) => {
+          if (playIcon) {
+            setPlayIcon(!playIcon);
+          }
+          audioRef.current.play();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  // Handles track choice buttons.
+  const handleTrackRewind = () => {
+    const playPromise = audioRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then((_) => {
+          if (playIcon) {
+            setPlayIcon(!playIcon);
+          }
+          audioRef.current.play();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  return (
+    <>
+      {alert && (
+        <Alert onClose={() => setAlert(false)} dismissible variant="danger">
+          <Alert.Heading>Work in progress.</Alert.Heading>
+          Not all features are available yet.
+        </Alert>
+      )}
+
+      <PlayerWrapper>
+        <Player>
+          <Timer>
+            <div className="elapsed">{currentTime}</div>
+            <div className="total">{audioDuration}</div>
+          </Timer>
+          <ProgressBar>
+            <Input
+              ref={progress}
+              percentage={String(percentage)}
+              onChange={onChange}
+            />
+          </ProgressBar>
+          <PlayerControls>
+            <Control
+              onClick={() => {
+                if (!load && playlist.length > 0) {
+                  if (activeTrackID === 0) {
+                    setActiveTrackID(playlist.length - 1);
+                    handleTrackRewind();
+                  } else {
+                    setActiveTrackID(activeTrackID - 1);
+                    handleTrackRewind();
+                  }
+                }
+              }}
+            >
+              <RewindButton />
+            </Control>
+            <Control
+              onClick={() => {
+                if (!load && playlist.length > 0) {
+                  setPlayIcon(!playIcon);
+                  if (playIcon) {
+                    audioRef.current.play();
+                  } else {
+                    audioRef.current.pause();
+                  }
+                }
+              }}
+            >
+              {playIcon ? <PlayButton /> : <PauseButton />}
+            </Control>
+            <Control
+              onClick={() => {
+                if (!load && playlist.length > 0) {
+                  if (activeTrackID < playlist.length - 1) {
+                    setActiveTrackID(activeTrackID + 1);
+                    handleTrackRewind();
+                  } else {
+                    setActiveTrackID(0);
+                    handleTrackRewind();
+                  }
+                }
+              }}
+            >
+              <ForwardButton />
+            </Control>
+          </PlayerControls>
+          <PlayerVolumeWrapper>
+            <PlayerVolume>
+              <VolumeIcon
+                onClick={() => {
+                  setMuted(!muted);
+                }}
+              >
+                {!muted ? <VolumeLogo /> : <MutedLogo />}
+              </VolumeIcon>
+              <VolumeSliderContainer>
+                <VolumeSlider
+                  ref={volume}
+                  onChange={() =>
+                    (audioRef.current.volume = volume.current.value)
+                  }
+                ></VolumeSlider>
+              </VolumeSliderContainer>
+            </PlayerVolume>
+          </PlayerVolumeWrapper>
+
+          <SongTitle>
+            {!load &&
+            playlist.length > 0 &&
+            playlist[activeTrackID ? activeTrackID : 0].name
+              ? playlist[activeTrackID ? activeTrackID : 0].name
+              : "Playlist empty or content blocked."}
+          </SongTitle>
+          <SongSubTitle>
+            {!load &&
+            playlist.length > 0 &&
+            playlist[activeTrackID ? activeTrackID : 0].artist
+              ? playlist[activeTrackID ? activeTrackID : 0].artist
+              : playlist.length === 0 && "In China consider using VPN."}
+          </SongSubTitle>
+        </Player>
+        <PlayList>
+          <PlaylistHeader>
+            <PlaylistTitle>
+              {desc ? desc.title : "Default playlist"}
+            </PlaylistTitle>
+            <PlaylistInfo>
+              {desc ? desc.desc : "Default description"}
+            </PlaylistInfo>
+          </PlaylistHeader>
+
+          <PlaylistItems>
+            {!load ? (
+              playlist.map((track, i) => {
+                return (
+                  <PlaylistTrack
+                    isOdd={i % 2 === 0}
+                    isActive={activeTrackID === i ? true : false}
+                    key={i}
+                    id={i}
+                    onClick={handleTrackChoice}
+                  >
+                    <TrackIcon>
+                      {activeTrackID !== i ? (
+                        <TrackSymbol />
+                      ) : loading ? (
+                        <TrackLoading />
+                      ) : (
+                        <Equilizer playing={!playIcon} />
+                      )}
+                    </TrackIcon>
+                    <TrackInfo>
+                      <TrackTitle>
+                        {track.name ? track.name : "Default"}
+                      </TrackTitle>
+                      <TrackSubTitle>
+                        {track.artist ? track.artist : "Default"}
+                      </TrackSubTitle>
+                    </TrackInfo>
+                    <TrackSubTitle>
+                      {track.duration ? track.duration : "00:00"}
+                    </TrackSubTitle>
+                  </PlaylistTrack>
+                );
+              })
+            ) : (
+              <center>
+                <TrackLoading />
+              </center>
+            )}
+          </PlaylistItems>
+        </PlayList>
+        <audio
+          ref={audioRef}
+          onLoadStart={() => setLoading(true)}
+          onCanPlay={() => setLoading(false)}
+          onTimeUpdate={getCurrDuration}
+          onLoadedData={(e) => {
+            setAudioDuration(convertAudioDuration(audioRef.current.duration));
+          }}
+          onEnded={() => {
+            setPlayIcon(!playIcon);
+            audioRef.current.currentTime = 0;
+          }}
+          src={
+            !load && playlist.length > 0
+              ? playlist[activeTrackID ? activeTrackID : 0].musicSrc
+              : ""
+          }
+          muted={muted}
+        />
+      </PlayerWrapper>
+    </>
+  );
+};
+
+export default MusicPlayer;
 
 const PlayerWrapper = styled.section`
   * {
@@ -16,6 +285,10 @@ const PlayerWrapper = styled.section`
     padding: 0;
     box-sizing: border-box;
   }
+  -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+  margin-bottom: 1rem;
 `;
 
 const Player = styled.section`
@@ -111,6 +384,13 @@ const PlayerControls = styled.ul`
   list-style: none;
   padding: 1rem 2rem;
   justify-content: space-between;
+  @media (max-width: 579px) {
+    padding: 0.4rem 0.8rem;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
 `;
 
 const Control = styled.li`
@@ -118,14 +398,14 @@ const Control = styled.li`
 `;
 
 const SongTitle = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   line-height: 1em;
   margin: 0.975rem 0 0;
   text-align: center;
 `;
 
 const SongSubTitle = styled.h2`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   line-height: 1em;
   margin: 0.75rem 0 0;
   padding-bottom: 0.75rem;
@@ -135,13 +415,31 @@ const SongSubTitle = styled.h2`
 `;
 
 const PlayerVolume = styled.div`
-  display: flex;
-  padding: 2rem;
-  justify-content: space-space-around;
+  padding: 0.5rem;
 `;
-
-const VolumeIcon = styled.div``;
-
+const PlayerVolumeWrapper = styled.div``;
+const VolumeIcon = styled.span`
+  cursor: pointer;
+`;
+const VolumeSliderContainer = styled.div`
+  width: 0;
+  visibility: hidden;
+  position: relative;
+  transform: translate(42px, -34px);
+  transition: 0.5s ease;
+  @media (max-width: 579px) {
+    width: 30%;
+    visibility: visible;
+  }
+  ${VolumeIcon}:hover ~ & {
+    width: 30%;
+    visibility: visible;
+  }
+  &:hover {
+    width: 30%;
+    visibility: visible;
+  }
+`;
 const VolumeSlider = styled.input.attrs((props) => ({
   type: "range",
   min: 0,
@@ -154,14 +452,13 @@ const VolumeSlider = styled.input.attrs((props) => ({
   appearance: none;
   background: #f2f2f2;
   height: 8px;
-  position: relative;
-  width: 50%;
   font-family: sans-serif;
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
+  width: 100%;
   outline: none;
-  transform: translate(10px, 10px);
+
   ::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: 1px solid #000000;
@@ -207,7 +504,7 @@ const PlaylistHeader = styled.header`
 `;
 
 const PlaylistTitle = styled.h1`
-  font-size: 1.95rem;
+  font-size: 1.6rem;
   line-height: 1em;
   margin: 0 0 0.975rem;
   margin-top: 0;
@@ -224,6 +521,11 @@ const PlaylistItems = styled.ol`
   overflow: auto;
   background: #3d5372;
   color: #f2f2f2;
+  @media (max-width: 579px) {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
   ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -248,9 +550,18 @@ const PlaylistTrack = styled.li`
   display: flex;
   justify-content: space-between;
   margin: 0;
-  padding: 2rem 3rem;
-  background: ${(props) => (props.isOdd ? `#202020` : `#000`)};
-  background: ${(props) => props.isActive && `#6a0707`};
+  padding: 1.2rem 3rem;
+  ${(props) => (props.isOdd ? `background:#222222` : `background:#000`)};
+  ${(props) =>
+    props.isActive &&
+    `background: rgb(0,0,0);
+background: -moz-linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);
+background: -webkit-linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);
+background: linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);`};
+
+  @media (max-width: 579px) {
+    padding: 1rem 1rem;
+  }
 `;
 
 const TrackIcon = styled.div``;
@@ -258,244 +569,22 @@ const TrackIcon = styled.div``;
 const TrackInfo = styled.div`
   margin: 0 2rem;
   width: 100%;
+  @media (max-width: 579px) {
+    margin: 0 1rem;
+  }
 `;
 
 const TrackTitle = styled.h3`
-  font-size: 1.3rem;
+  font-size: 1rem;
   line-height: 1em;
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
+  @media (max-width: 579px) {
+    font-size: 0.85rem;
+  }
 `;
 
-const TrackSubTitle = styled.span``;
-
-const MusicPlayer = ({ playlist, load }) => {
-  const [playIcon, setPlayIcon] = useState(true);
-  const [audioDuration, setAudioDuration] = useState("00:00");
-  const [currentTime, setCurrentTime] = useState("00:00");
-  const [percentage, setPercentage] = useState(0);
-  const [alert, setAlert] = useState(true);
-  const [activeTrackID, setActiveTrackID] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const volume = useRef(null);
-  const progress = useRef(null);
-  const audioRef = useRef();
-  useEffect(() => {
-    audioRef.current.volume = volume.current.value;
-  }, []);
-
-  useEffect(() => {
-    if (isNaN(percentage)) {
-      setPercentage(0);
-    }
-  }, [percentage]);
-
-  const convertAudioDuration = (convert) => {
-    var minutes = "0" + Math.floor(convert / 60);
-    var seconds = "0" + Math.floor(convert - minutes * 60);
-    var dur = minutes.substr(-2) + ":" + seconds.substr(-2);
-    return dur;
-  };
-
-  const onChange = (e) => {
-    const audio = audioRef.current;
-    if (!loading) {
-      audio.currentTime = (audio.duration / 100) * e.target.value;
-      setPercentage(e.target.value);
-    }
-  };
-
-  const getCurrDuration = (e) => {
-    const percent = (
-      (e.currentTarget.currentTime / e.currentTarget.duration) *
-      100
-    ).toFixed(2);
-    const time = e.currentTarget.currentTime;
-
-    setPercentage(+percent);
-    setCurrentTime(convertAudioDuration(time.toFixed(2)));
-  };
-
-  const handleTrackChoice = (e) => {
-    setActiveTrackID(parseInt(e.currentTarget.id));
-
-    const playPromise = audioRef.current.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then((_) => {
-          if (playIcon) {
-            setPlayIcon(!playIcon);
-          }
-          audioRef.current.play();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
-  const handleTrackRewind = () => {
-    const playPromise = audioRef.current.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then((_) => {
-          if (playIcon) {
-            setPlayIcon(!playIcon);
-          }
-          audioRef.current.play();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
-  return (
-    <>
-      {alert && (
-        <Alert onClose={() => setAlert(false)} dismissible variant="danger">
-          <Alert.Heading>Work in progress.</Alert.Heading>
-          Not all features are available yet.
-        </Alert>
-      )}
-
-      <PlayerWrapper>
-        <Player>
-          <Timer>
-            <div className="elapsed">{currentTime}</div>
-            <div className="total">{audioDuration}</div>
-          </Timer>
-          <ProgressBar>
-            <Input
-              ref={progress}
-              percentage={String(percentage)}
-              onChange={onChange}
-            />
-          </ProgressBar>
-          <PlayerControls>
-            <Control
-              onClick={() => {
-                if (activeTrackID === 0) {
-                  setActiveTrackID(playlist.length - 1);
-                  handleTrackRewind();
-                } else {
-                  setActiveTrackID(activeTrackID - 1);
-                  handleTrackRewind();
-                }
-              }}
-            >
-              <RewindButton />
-            </Control>
-            <Control
-              onClick={() => {
-                setPlayIcon(!playIcon);
-                if (playIcon) {
-                  audioRef.current.play();
-                } else {
-                  audioRef.current.pause();
-                }
-              }}
-            >
-              {playIcon ? <PlayButton /> : <PauseButton />}
-            </Control>
-            <Control
-              onClick={() => {
-                if (activeTrackID < playlist.length - 1) {
-                  setActiveTrackID(activeTrackID + 1);
-                  handleTrackRewind();
-                } else {
-                  setActiveTrackID(0);
-                  handleTrackRewind();
-                }
-              }}
-            >
-              <ForwardButton />
-            </Control>
-          </PlayerControls>
-          <PlayerVolume>
-            <VolumeIcon>
-              <VolumeLogo />
-            </VolumeIcon>
-            <VolumeSlider
-              ref={volume}
-              onChange={() => (audioRef.current.volume = volume.current.value)}
-            ></VolumeSlider>
-          </PlayerVolume>
-          <SongTitle>
-            {!load && playlist[activeTrackID ? activeTrackID : 0].name
-              ? playlist[activeTrackID ? activeTrackID : 0].name
-              : "Default"}
-          </SongTitle>
-          <SongSubTitle>
-            {!load && playlist[activeTrackID ? activeTrackID : 0].artist
-              ? playlist[activeTrackID ? activeTrackID : 0].artist
-              : "Default"}
-          </SongSubTitle>
-        </Player>
-        <PlayList>
-          <PlaylistHeader>
-            <PlaylistTitle>Playlist with something...</PlaylistTitle>
-            <PlaylistInfo>Short info about songs below maybe?</PlaylistInfo>
-          </PlaylistHeader>
-          <PlaylistItems>
-            {!load ? (
-              playlist.map((track, i) => {
-                return (
-                  <PlaylistTrack
-                    isOdd={i % 2 === 0}
-                    isActive={activeTrackID === i ? true : false}
-                    key={i}
-                    id={i}
-                    onClick={handleTrackChoice}
-                  >
-                    <TrackIcon>
-                      {activeTrackID !== i ? (
-                        <TrackSymbol />
-                      ) : loading ? (
-                        <TrackLoading />
-                      ) : (
-                        <Equilizer playing={!playIcon} />
-                      )}
-                    </TrackIcon>
-                    <TrackInfo>
-                      <TrackTitle>
-                        {track.name ? track.name : "Default"}
-                      </TrackTitle>
-                      <TrackSubTitle>
-                        {track.artist ? track.artist : "Default"}
-                      </TrackSubTitle>
-                    </TrackInfo>
-                    <TrackSubTitle>
-                      {track.duration ? track.duration : "00:00"}
-                    </TrackSubTitle>
-                  </PlaylistTrack>
-                );
-              })
-            ) : (
-              <center>
-                <TrackLoading />
-              </center>
-            )}
-          </PlaylistItems>
-        </PlayList>
-        <audio
-          ref={audioRef}
-          onLoadStart={() => setLoading(true)}
-          onCanPlay={() => setLoading(false)}
-          onTimeUpdate={getCurrDuration}
-          onLoadedData={(e) => {
-            setAudioDuration(convertAudioDuration(audioRef.current.duration));
-          }}
-          onEnded={() => {
-            setPlayIcon(!playIcon);
-            audioRef.current.currentTime = 0;
-          }}
-          src={
-            !load ? playlist[activeTrackID ? activeTrackID : 0].musicSrc : ""
-          }
-        />
-      </PlayerWrapper>
-    </>
-  );
-};
-
-export default MusicPlayer;
+const TrackSubTitle = styled.span`
+  @media (max-width: 579px) {
+    font-size: 0.75rem;
+  }
+`;
