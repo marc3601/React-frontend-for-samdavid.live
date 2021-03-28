@@ -16,14 +16,11 @@ const Music = () => {
         <Col xl={6} lg={6}>
           {" "}
           <Card>
-            <Link
-              className="overflow-hidden text-center"
-              to="/music/remix"
-            >
+            <Link className="overflow-hidden text-center" to="/music/remix">
               <h3 className="position-relative top-50 start-100 translate-middle text-dark">
                 Remix
               </h3>
-              <Image fluid src={cat1} />
+              <Image minheight="100px" fluid src={cat1} />
             </Link>
           </Card>
           <Card>
@@ -41,7 +38,7 @@ const Music = () => {
         <Col xl={6} lg={6}>
           <Card>
             <Link className="overflow-hidden text-center" to="/music/dj-sets">
-            <h3 className="position-relative top-50 start-100 translate-middle text-dark">
+              <h3 className="position-relative top-50 start-100 translate-middle text-dark">
                 Dj sets
               </h3>
               <Image fluid src={cat3} />
@@ -49,7 +46,7 @@ const Music = () => {
           </Card>
           <Card>
             <Link className="overflow-hidden text-center" to="/music/projects">
-            <h3 className="position-relative top-50 start-100 translate-middle text-dark">
+              <h3 className="position-relative top-50 start-100 translate-middle text-dark">
                 Projects
               </h3>
               <Image fluid src={cat4} />

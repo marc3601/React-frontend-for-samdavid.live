@@ -188,18 +188,26 @@ const MusicPlayer = ({ playlist, load, desc }) => {
           </PlayerVolumeWrapper>
 
           <SongTitle>
-            {!load &&
+            {/* {!load &&
             playlist.length > 0 &&
             playlist[activeTrackID ? activeTrackID : 0].name
               ? playlist[activeTrackID ? activeTrackID : 0].name
-              : "Playlist empty or content blocked."}
+              : "Playlist empty or content blocked."} */}
+            {!load &&
+              playlist.length === 0 &&
+              "Playlist empty or content blocked."}
+            {!load &&
+              playlist.length > 0 &&
+              playlist[activeTrackID ? activeTrackID : 0].name}
           </SongTitle>
           <SongSubTitle>
-            {!load &&
+            {/* {!load &&
             playlist.length > 0 &&
             playlist[activeTrackID ? activeTrackID : 0].artist
               ? playlist[activeTrackID ? activeTrackID : 0].artist
-              : playlist.length === 0 && "In China consider using VPN."}
+              : playlist.length === 0 && "In China consider using VPN."} */}
+            {!load && playlist.length === 0 && "In China consider using VPN."}
+            {!load && playlist.length > 0 && "Sam David"}
           </SongSubTitle>
         </Player>
         <PlayList>
@@ -237,7 +245,7 @@ const MusicPlayer = ({ playlist, load, desc }) => {
                         {track.name ? track.name : "Default"}
                       </TrackTitle>
                       <TrackSubTitle>
-                        {track.artist ? track.artist : "Default"}
+                        {track.artist ? track.artist : "Sam David"}
                       </TrackSubTitle>
                     </TrackInfo>
                     <TrackSubTitle>
@@ -292,7 +300,7 @@ const PlayerWrapper = styled.section`
 `;
 
 const Player = styled.section`
-  background: rgb(176, 170, 245);
+  background: rgb(201 201 206);
   background: -moz-radial-gradient(
     circle,
     rgb(207 206 217) 0%,
@@ -382,8 +390,9 @@ const Input = styled.input.attrs((props) => ({
 const PlayerControls = styled.ul`
   display: flex;
   list-style: none;
-  padding: 1rem 2rem;
+  padding: 0.7rem 2rem;
   justify-content: space-between;
+  box-shadow: 0px 4px 3px 0px #1f03032e;
   @media (max-width: 579px) {
     padding: 0.4rem 0.8rem;
     svg {
@@ -400,8 +409,8 @@ const Control = styled.li`
 const SongTitle = styled.h1`
   font-size: 1.2rem;
   line-height: 1em;
-  margin: 0.975rem 0 0;
   text-align: center;
+  padding: 0 1rem;
 `;
 
 const SongSubTitle = styled.h2`
@@ -415,7 +424,7 @@ const SongSubTitle = styled.h2`
 `;
 
 const PlayerVolume = styled.div`
-  padding: 0.5rem;
+  padding: 0 0.5rem;
 `;
 const PlayerVolumeWrapper = styled.div``;
 const VolumeIcon = styled.span`
@@ -463,7 +472,7 @@ const VolumeSlider = styled.input.attrs((props) => ({
     -webkit-appearance: none;
     border: 1px solid #000000;
     border-radius: 3vw;
-    height: 16px;
+    height: 10px;
     width: 16px;
     border-radius: 3px;
     background: black;
@@ -473,7 +482,7 @@ const VolumeSlider = styled.input.attrs((props) => ({
   ::-moz-range-thumb {
     border: 1px solid #000000;
     border-radius: 3vw;
-    height: 16px;
+    height: 10px;
     width: 16px;
     border-radius: 3px;
     background: black;
@@ -483,7 +492,7 @@ const VolumeSlider = styled.input.attrs((props) => ({
   ::-ms-thumb {
     border: 1px solid #000000;
     border-radius: 3vw;
-    height: 16px;
+    height: 10px;
     width: 16px;
     border-radius: 3px;
     background: black;
@@ -501,6 +510,9 @@ const PlaylistHeader = styled.header`
   -webkit-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.27);
   -moz-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.27);
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.27);
+  @media (max-width: 579px) {
+    padding: 1.4rem;
+  }
 `;
 
 const PlaylistTitle = styled.h1`

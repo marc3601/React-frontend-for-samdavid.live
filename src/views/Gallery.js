@@ -6,9 +6,11 @@ import img3 from "../assets/sam3.jpg";
 import img4 from "../assets/sam4.jpg";
 import img5 from "../assets/sam5.jpg";
 import img6 from "../assets/sam6.jpg";
+import img7 from "../assets/sam7.jpg";
+import img8 from "../assets/sam8.jpg";
 
-const arr1 = [img1, img2, img3];
-const arr2 = [img4, img5, img6];
+const arr1 = [img1, img2, img3, img7];
+const arr2 = [img4, img5, img6, img8];
 const Gallery = () => {
   const [alert, setAlert] = useState(true);
   return (
@@ -22,7 +24,7 @@ const Gallery = () => {
       )}
       <Row>
         <Col lg={6} md={12}>
-          {arr1.map((item,i) => (
+          {arr1.map((item, i) => (
             <Image
               fluid
               src={item}
@@ -33,7 +35,7 @@ const Gallery = () => {
           ))}
         </Col>
         <Col lg={6} md={12}>
-          {arr2.map((item,i) => (
+          {arr2.map((item, i) => (
             <Image
               fluid
               src={item}
