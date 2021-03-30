@@ -8,14 +8,44 @@ import img5 from "../assets/sam5.jpg";
 import img6 from "../assets/sam6.jpg";
 import img7 from "../assets/sam7.jpg";
 import img8 from "../assets/sam8.jpg";
+import img9 from "../assets/sam9.jpg";
+import img10 from "../assets/sam10.jpg";
+import img11 from "../assets/sam11.jpg";
+import img12 from "../assets/sam12.jpeg";
+import img13 from "../assets/sam13.jpg";
+import img14 from "../assets/sam14.jpg";
+import Modal from "../components/Modal";
+const arr1 = [
+  img1,
+  img2,
+  img3,
+  img4,
+  img5,
+  img6,
+  img7,
+  img8,
+  img9,
+  img10,
+  img11,
+  img12,
+  img13,
+  img14,
+];
 
-const arr1 = [img1, img2, img3, img7];
-const arr2 = [img4, img5, img6, img8];
 const Gallery = () => {
   const [alert, setAlert] = useState(true);
+  const [modal, isModalActive] = useState(false);
+  const [currentImage, setCurentImage] = useState(null);
+
+  const modalHandlr = (e) => {
+    isModalActive(!modal);
+    if (e.currentTarget.id !== undefined) setCurentImage(e.currentTarget.id);
+  };
   return (
     <Container>
-      <h2 className="display-3 text-center  text-dark">Gallery</h2>
+      <h2 className="display-4 mb-4 mt-4 pb-4 text-center text-dark border-bottom">
+        Gallery
+      </h2>
       {alert && (
         <Alert onClose={() => setAlert(false)} dismissible variant="danger">
           <Alert.Heading>Work in progress.</Alert.Heading>
@@ -23,29 +53,23 @@ const Gallery = () => {
         </Alert>
       )}
       <Row>
-        <Col lg={6} md={12}>
-          {arr1.map((item, i) => (
-            <Image
-              fluid
-              src={item}
-              rounded
-              className="w-100 shadow-sm p-3 bg-white"
-              key={i}
-            />
-          ))}
-        </Col>
-        <Col lg={6} md={12}>
-          {arr2.map((item, i) => (
-            <Image
-              fluid
-              src={item}
-              rounded
-              className="w-100 shadow-sm p-3 bg-white"
-              key={i}
-            />
-          ))}
-        </Col>
+        {arr1.map((image, i) => (
+          <Col
+            style={{ cursor: "pointer" }}
+            onClick={modalHandlr}
+            id={i}
+            key={i}
+            xs={12}
+            sm={6}
+            lg={6}
+          >
+            <Image className="w-100 pb-3" src={image} />
+          </Col>
+        ))}
       </Row>
+      {modal && (
+        <Modal modal={modalHandlr} img={arr1} currentImage={currentImage} />
+      )}
     </Container>
   );
 };

@@ -8,7 +8,7 @@ import cat4 from "../assets/category4.jpg";
 const Music = () => {
   return (
     <Container>
-      <h2 className="display-3 text-center  text-dark">Music</h2>
+      <h2 className="display-4 mb-2 mt-4 text-center text-dark">Music</h2>
       <p className="lead text-dark text-center pt-2  mb-5">
         Explore music categories.
       </p>
