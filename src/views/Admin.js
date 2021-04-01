@@ -14,6 +14,7 @@ import { storageRef, db } from "../firebase";
 const Admin = () => {
   const [file, setFile] = useState(null);
   const [alert, setAlert] = useState(false);
+  const [alertD, setAlertD] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
@@ -166,8 +167,46 @@ const Admin = () => {
     <Container className="text-center">
       <h2 className="display-4  mt-3 mb-4">Content management</h2>
       <p className="lead">Music upload system</p>
+
       <Row className="d-flex justify-content-center">
         <Col lg={8}>
+          {alertD && (
+            <Alert
+              onClose={() => setAlertD(false)}
+              dismissible
+              variant="danger"
+            >
+              <Alert.Heading>Instruction. (Work in progress)</Alert.Heading>
+              <ul
+                style={{
+                  paddingLeft: 0,
+                  listStylePosition: "inside",
+                  textAlign: "left",
+                }}
+              >
+                <li>Choose music category.</li>
+                <li>Choose mp3 file to upload.</li>
+                <li>
+                  Wait until all three fields in "Detected metadata" are filled.
+                  (1-5s.)
+                </li>
+                <li>Click upload.</li>
+                <li>Message will appear when upload is completed.</li>
+                <li>Refresh the page if you want to cancel the upload.</li>
+                <br />
+                <li>
+                  Ability to upload images & delete songs etc. will be added
+                  soon.
+                </li>
+                <li>
+                  You may expierience some random crashes of this system and it
+                  is expected at this point. (Simple refresh will bring things
+                  back to normal) There' still some work to do with stability
+                  and error handling of this system. Will fix that soon. 🙂
+                </li>
+              </ul>
+            </Alert>
+          )}
           <Card className="mt-5 shadow p-3 mb-5 bg-white rounded">
             <Card.Title className="text-center mt-3 mb-3" md={4}>
               Choose category and file to upload.
@@ -203,6 +242,9 @@ const Admin = () => {
                         required
                         className="mt-4"
                         onChange={(e) => {
+                          setDuration(null);
+                          setFileName("");
+                          setFileType(null);
                           const file = e.target.files[0];
                           setFile(file);
                           if (file !== null || file !== undefined) {

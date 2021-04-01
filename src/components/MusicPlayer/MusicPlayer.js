@@ -16,7 +16,6 @@ const MusicPlayer = ({ playlist, load, desc }) => {
   const [audioDuration, setAudioDuration] = useState("00:00");
   const [currentTime, setCurrentTime] = useState("00:00");
   const [percentage, setPercentage] = useState(0);
-  const [alert, setAlert] = useState(true);
   const [activeTrackID, setActiveTrackID] = useState(0);
   const [muted, setMuted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -100,188 +99,169 @@ const MusicPlayer = ({ playlist, load, desc }) => {
   };
 
   return (
-    <>
-      {alert && (
-        <Alert onClose={() => setAlert(false)} dismissible variant="danger">
-          <Alert.Heading>Work in progress.</Alert.Heading>
-          Not all features are available yet.
-        </Alert>
-      )}
+    <PlayerWrapper>
+      <Player>
+        <Timer>
+          <div className="elapsed">{currentTime}</div>
+          <div className="total">{audioDuration}</div>
+        </Timer>
+        <ProgressBar>
+          <Input
+            ref={progress}
+            percentage={String(percentage)}
+            onChange={onChange}
+          />
+        </ProgressBar>
+        <PlayerControls>
+          <Control
+            onClick={() => {
+              if (!load && playlist.length > 0) {
+                if (activeTrackID === 0) {
+                  setActiveTrackID(playlist.length - 1);
+                  handleTrackRewind();
+                } else {
+                  setActiveTrackID(activeTrackID - 1);
+                  handleTrackRewind();
+                }
+              }
+            }}
+          >
+            <RewindButton />
+          </Control>
+          <Control
+            onClick={() => {
+              if (!load && playlist.length > 0) {
+                setPlayIcon(!playIcon);
+                if (playIcon) {
+                  audioRef.current.play();
+                } else {
+                  audioRef.current.pause();
+                }
+              }
+            }}
+          >
+            {playIcon ? <PlayButton /> : <PauseButton />}
+          </Control>
+          <Control
+            onClick={() => {
+              if (!load && playlist.length > 0) {
+                if (activeTrackID < playlist.length - 1) {
+                  setActiveTrackID(activeTrackID + 1);
+                  handleTrackRewind();
+                } else {
+                  setActiveTrackID(0);
+                  handleTrackRewind();
+                }
+              }
+            }}
+          >
+            <ForwardButton />
+          </Control>
+        </PlayerControls>
+        <PlayerVolumeWrapper>
+          <PlayerVolume>
+            <VolumeIcon
+              onClick={() => {
+                setMuted(!muted);
+              }}
+            >
+              {!muted ? <VolumeLogo /> : <MutedLogo />}
+            </VolumeIcon>
+            <VolumeSliderContainer>
+              <VolumeSlider
+                ref={volume}
+                onChange={() =>
+                  (audioRef.current.volume = volume.current.value)
+                }
+              ></VolumeSlider>
+            </VolumeSliderContainer>
+          </PlayerVolume>
+        </PlayerVolumeWrapper>
 
-      <PlayerWrapper>
-        <Player>
-          <Timer>
-            <div className="elapsed">{currentTime}</div>
-            <div className="total">{audioDuration}</div>
-          </Timer>
-          <ProgressBar>
-            <Input
-              ref={progress}
-              percentage={String(percentage)}
-              onChange={onChange}
-            />
-          </ProgressBar>
-          <PlayerControls>
-            <Control
-              onClick={() => {
-                if (!load && playlist.length > 0) {
-                  if (activeTrackID === 0) {
-                    setActiveTrackID(playlist.length - 1);
-                    handleTrackRewind();
-                  } else {
-                    setActiveTrackID(activeTrackID - 1);
-                    handleTrackRewind();
-                  }
-                }
-              }}
-            >
-              <RewindButton />
-            </Control>
-            <Control
-              onClick={() => {
-                if (!load && playlist.length > 0) {
-                  setPlayIcon(!playIcon);
-                  if (playIcon) {
-                    audioRef.current.play();
-                  } else {
-                    audioRef.current.pause();
-                  }
-                }
-              }}
-            >
-              {playIcon ? <PlayButton /> : <PauseButton />}
-            </Control>
-            <Control
-              onClick={() => {
-                if (!load && playlist.length > 0) {
-                  if (activeTrackID < playlist.length - 1) {
-                    setActiveTrackID(activeTrackID + 1);
-                    handleTrackRewind();
-                  } else {
-                    setActiveTrackID(0);
-                    handleTrackRewind();
-                  }
-                }
-              }}
-            >
-              <ForwardButton />
-            </Control>
-          </PlayerControls>
-          <PlayerVolumeWrapper>
-            <PlayerVolume>
-              <VolumeIcon
-                onClick={() => {
-                  setMuted(!muted);
-                }}
-              >
-                {!muted ? <VolumeLogo /> : <MutedLogo />}
-              </VolumeIcon>
-              <VolumeSliderContainer>
-                <VolumeSlider
-                  ref={volume}
-                  onChange={() =>
-                    (audioRef.current.volume = volume.current.value)
-                  }
-                ></VolumeSlider>
-              </VolumeSliderContainer>
-            </PlayerVolume>
-          </PlayerVolumeWrapper>
-
-          <SongTitle>
-            {/* {!load &&
+        <SongTitle>
+          {!load &&
+            playlist.length === 0 &&
+            "Playlist empty or content blocked."}
+          {!load &&
             playlist.length > 0 &&
-            playlist[activeTrackID ? activeTrackID : 0].name
-              ? playlist[activeTrackID ? activeTrackID : 0].name
-              : "Playlist empty or content blocked."} */}
-            {!load &&
-              playlist.length === 0 &&
-              "Playlist empty or content blocked."}
-            {!load &&
-              playlist.length > 0 &&
-              playlist[activeTrackID ? activeTrackID : 0].name}
-          </SongTitle>
-          <SongSubTitle>
-            {/* {!load &&
-            playlist.length > 0 &&
-            playlist[activeTrackID ? activeTrackID : 0].artist
-              ? playlist[activeTrackID ? activeTrackID : 0].artist
-              : playlist.length === 0 && "In China consider using VPN."} */}
-            {!load && playlist.length === 0 && "In China consider using VPN."}
-            {!load && playlist.length > 0 && "Sam David"}
-          </SongSubTitle>
-        </Player>
-        <PlayList>
-          <PlaylistHeader>
-            <PlaylistTitle>
-              {desc ? desc.title : "Default playlist"}
-            </PlaylistTitle>
-            <PlaylistInfo>
-              {desc ? desc.desc : "Default description"}
-            </PlaylistInfo>
-          </PlaylistHeader>
+            playlist[activeTrackID ? activeTrackID : 0].name}
+        </SongTitle>
+        <SongSubTitle>
+          {!load && playlist.length === 0 && "In China consider using VPN."}
+          {!load && playlist.length > 0 && "Sam David"}
+        </SongSubTitle>
+      </Player>
+      <PlayList>
+        <PlaylistHeader>
+          <PlaylistTitle>
+            {desc ? desc.title : "Default playlist"}
+          </PlaylistTitle>
+          <PlaylistInfo>
+            {desc ? desc.desc : "Default description"}
+          </PlaylistInfo>
+        </PlaylistHeader>
 
-          <PlaylistItems>
-            {!load ? (
-              playlist.map((track, i) => {
-                return (
-                  <PlaylistTrack
-                    isOdd={i % 2 === 0}
-                    isActive={activeTrackID === i ? true : false}
-                    key={i}
-                    id={i}
-                    onClick={handleTrackChoice}
-                  >
-                    <TrackIcon>
-                      {activeTrackID !== i ? (
-                        <TrackSymbol />
-                      ) : loading ? (
-                        <TrackLoading />
-                      ) : (
-                        <Equilizer playing={!playIcon} />
-                      )}
-                    </TrackIcon>
-                    <TrackInfo>
-                      <TrackTitle>
-                        {track.name ? track.name : "Default"}
-                      </TrackTitle>
-                      <TrackSubTitle>
-                        {track.artist ? track.artist : "Sam David"}
-                      </TrackSubTitle>
-                    </TrackInfo>
+        <PlaylistItems>
+          {!load ? (
+            playlist.map((track, i) => {
+              return (
+                <PlaylistTrack
+                  isOdd={i % 2 === 0}
+                  isActive={activeTrackID === i ? true : false}
+                  key={i}
+                  id={i}
+                  onClick={handleTrackChoice}
+                >
+                  <TrackIcon>
+                    {activeTrackID !== i ? (
+                      <TrackSymbol />
+                    ) : loading ? (
+                      <TrackLoading />
+                    ) : (
+                      <Equilizer playing={!playIcon} />
+                    )}
+                  </TrackIcon>
+                  <TrackInfo>
+                    <TrackTitle>
+                      {track.name ? track.name : "Default"}
+                    </TrackTitle>
                     <TrackSubTitle>
-                      {track.duration ? track.duration : "00:00"}
+                      {track.artist ? track.artist : "Sam David"}
                     </TrackSubTitle>
-                  </PlaylistTrack>
-                );
-              })
-            ) : (
-              <center>
-                <TrackLoading />
-              </center>
-            )}
-          </PlaylistItems>
-        </PlayList>
-        <audio
-          ref={audioRef}
-          onLoadStart={() => setLoading(true)}
-          onCanPlay={() => setLoading(false)}
-          onTimeUpdate={getCurrDuration}
-          onLoadedData={(e) => {
-            setAudioDuration(convertAudioDuration(audioRef.current.duration));
-          }}
-          onEnded={() => {
-            setPlayIcon(!playIcon);
-            audioRef.current.currentTime = 0;
-          }}
-          src={
-            !load && playlist.length > 0
-              ? playlist[activeTrackID ? activeTrackID : 0].musicSrc
-              : ""
-          }
-          muted={muted}
-        />
-      </PlayerWrapper>
-    </>
+                  </TrackInfo>
+                  <TrackSubTitle>
+                    {track.duration ? track.duration : "00:00"}
+                  </TrackSubTitle>
+                </PlaylistTrack>
+              );
+            })
+          ) : (
+            <center>
+              <TrackLoading />
+            </center>
+          )}
+        </PlaylistItems>
+      </PlayList>
+      <audio
+        ref={audioRef}
+        onLoadStart={() => setLoading(true)}
+        onCanPlay={() => setLoading(false)}
+        onTimeUpdate={getCurrDuration}
+        onLoadedData={(e) => {
+          setAudioDuration(convertAudioDuration(audioRef.current.duration));
+        }}
+        onEnded={() => {
+          setPlayIcon(!playIcon);
+          audioRef.current.currentTime = 0;
+        }}
+        src={
+          !load && playlist.length > 0
+            ? playlist[activeTrackID ? activeTrackID : 0].musicSrc
+            : ""
+        }
+        muted={muted}
+      />
+    </PlayerWrapper>
   );
 };
 
@@ -362,8 +342,6 @@ const Input = styled.input.attrs((props) => ({
     border-radius: 3px;
     background: black;
     cursor: pointer;
-    /* margin-top: -14px; You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-    /* box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; Add cool effects to your sliders! */
   }
 
   ::-moz-range-thumb {
