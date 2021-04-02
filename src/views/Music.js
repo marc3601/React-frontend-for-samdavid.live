@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Card, Image } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import cat1 from "../assets/category1.jpg";
@@ -34,8 +34,6 @@ const Music = () => {
               className="overflow-hidden text-center"
               to="/music/original-music"
             >
-              {/* <h3 className="text-dark">Original music</h3>
-              <Image fluid src={cat2} /> */}
               <HeadingContainer image={cat2}>
                 <HeadingOverlay />
                 <Heading>Original music</Heading>
@@ -50,8 +48,6 @@ const Music = () => {
               className="overflow-hidden text-center"
               to="/music/dj-sets"
             >
-              {/* <h3 className="text-dark">Dj sets</h3>
-              <Image fluid src={cat3} /> */}
               <HeadingContainer image={cat3}>
                 <HeadingOverlay />
                 <Heading>Dj sets</Heading>
@@ -64,8 +60,6 @@ const Music = () => {
               className="overflow-hidden text-center"
               to="/music/projects"
             >
-              {/* <h3 className="text-dark">Projects</h3>
-              <Image fluid src={cat4} /> */}
               <HeadingContainer image={cat4}>
                 <HeadingOverlay />
                 <Heading>Projects</Heading>
@@ -98,7 +92,7 @@ const HeadingOverlay = styled.div`
   bottom: 0;
   background-color: black;
   opacity: 0.6;
-  transition: 0.1s ease;
+  transition: 0.5s ease;
   display: none;
 `;
 
@@ -114,5 +108,9 @@ const HeadingContainer = styled.div`
   }
   &:hover ${HeadingOverlay} {
     display: block;
+  }
+  @media (max-width: 576px) {
+    height: 330px;
+    background-position: top;
   }
 `;

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Zilla+Slab+Highlight:wght@700&display=swap");
 #bgc_container {
   background-image: url("../assets/main.jpg");
   background-size: cover;
@@ -29,21 +30,33 @@
   background-size: 100% 2.5vw;
 }
 
+.phrase {
+  background: rgba(0, 0, 0, 0.61);
+  margin-top: 3rem;
+  border-radius: 20px;
+}
+.custom_phrase {
+  font-family: "Kaushan Script", cursive;
+  font-size: 2.1rem;
+}
 
-
-@media (max-width: 500px) {
+@media (max-width: 576px) {
   .main_heading {
     font-size: 3.5rem;
   }
   #bgc_container {
     min-height: 90vh;
   }
+  .phrase {
+    background: rgba(0, 0, 0, 0.397);
+  }
+  .custom_phrase {
+    font-size: 1.8rem;
+  }
 }
 
 @media (orientation: landscape) {
   .custom_btn {
     margin-top: 5vh;
-  
   }
-  
 }
