@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FileType from "file-type/browser";
 import {
   Container,
@@ -11,6 +11,8 @@ import {
   Alert,
 } from "react-bootstrap";
 import { storageRef, db } from "../firebase";
+import ListItems from "../components/ListItems";
+import "./Admin.css";
 const Admin = () => {
   const [file, setFile] = useState(null);
   const [alert, setAlert] = useState(false);
@@ -23,6 +25,32 @@ const Admin = () => {
   const [fileType, setFileType] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [category, setCategory] = useState("remixes");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  let container = [];
+
+  const handleDelete = (item) => {
+    console.log(item.name);
+  };
+
+  const downloadMusic = (location) => {
+    db.collection(location)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          container.push(doc.data());
+        });
+      })
+      .finally(() => {
+        setData(container);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    downloadMusic(category);
+  }, [category]);
+
   const handleUpload = (e) => {
     if (fileType === "mp3" && duration) {
       e.preventDefault();
@@ -54,18 +82,30 @@ const Admin = () => {
         },
         () => {
           Promise.all([
-            uploadTask.snapshot.ref.getMetadata().then((data) => {
-              db.collection(category).doc(metadata.name).set({
-                name: data.name,
-                duration: duration,
-              });
-            }),
+            uploadTask.snapshot.ref
+              .getMetadata()
+              .then((data) => {
+                db.collection(category).doc(metadata.name).set({
+                  name: data.name,
+                  duration: duration,
+                });
+              })
+              .catch((e) => {
+                setAlert(true);
+                setMessage("Problem during upload with name or duration.");
+              }),
 
-            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-              db.collection(category).doc(metadata.name).update({
-                musicSrc: downloadURL,
-              });
-            }),
+            uploadTask.snapshot.ref
+              .getDownloadURL()
+              .then((downloadURL) => {
+                db.collection(category).doc(metadata.name).update({
+                  musicSrc: downloadURL,
+                });
+              })
+              .catch((e) => {
+                setAlert(true);
+                setMessage("Problem during upload with file url.");
+              }),
           ])
             .then(() => {
               setIsUploading(false);
@@ -73,6 +113,7 @@ const Admin = () => {
               setDuration(null);
               setFileName("");
               setFileType(null);
+              downloadMusic(category);
             })
             .catch((err) => {
               setIsUploading(false);
@@ -133,8 +174,9 @@ const Admin = () => {
     reader.onerror = (e) => {
       console.error("An error ocurred reading the file: ", e);
     };
-
-    reader.readAsArrayBuffer(input);
+    if (input instanceof Blob) {
+      reader.readAsArrayBuffer(input);
+    }
   };
 
   const convertAudioDuration = (convert) => {
@@ -158,151 +200,198 @@ const Admin = () => {
       case "3":
         setCategory("projects");
         break;
+      case "4":
+        setCategory("test");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const setTableCategoryName = (choice) => {
+    switch (choice) {
+      case "remixes":
+        return "Remixes.";
+      case "dj-sets":
+        return "Dj sets.";
+      case "original-music":
+        return "Original music.";
+      case "projects":
+        return "Projects.";
+      case "test":
+        return "Test.";
       default:
         break;
     }
   };
 
   return (
-    <Container className="text-center">
-      <h2 className="display-4  mt-3 mb-4">Content management</h2>
-      <p className="lead">Music upload system</p>
-
-      <Row className="d-flex justify-content-center">
-        <Col lg={8}>
-          {alertD && (
-            <Alert
-              onClose={() => setAlertD(false)}
-              dismissible
-              variant="danger"
-            >
-              <Alert.Heading>Instruction. (Work in progress)</Alert.Heading>
-              <ul
-                style={{
-                  paddingLeft: 0,
-                  listStylePosition: "inside",
-                  textAlign: "left",
-                }}
+    <Container fluid className="customAdminBackground">
+      <Container className="text-center">
+        <h2 className="display-4 pt-3 mb-4 text-light">Content management</h2>
+        <p className="lead font-weight-bold">Music upload system</p>
+        <Row className="d-flex justify-content-center">
+          <Col lg={12}>
+            {alertD && (
+              <Alert
+                onClose={() => setAlertD(false)}
+                dismissible
+                variant="info"
               >
-                <li>Choose music category.</li>
-                <li>Choose mp3 file to upload.</li>
-                <li>
-                  Wait until all three fields in "Detected metadata" are filled.
-                  (1-5s.)
-                </li>
-                <li>Click upload.</li>
-                <li>Message will appear when upload is completed.</li>
-                <li>Refresh the page if you want to cancel the upload.</li>
-                <br />
-                <li>
-                  Ability to upload images & delete songs etc. will be added
-                  soon.
-                </li>
-                <li>
-                  You may expierience some random crashes of this system and it
-                  is expected at this point. (Simple refresh will bring things
-                  back to normal) There' still some work to do with stability
-                  and error handling of this system. Will fix that soon. 🙂
-                </li>
-              </ul>
-            </Alert>
-          )}
-          <Card className="mt-5 shadow p-3 mb-5 bg-white rounded">
-            <Card.Title className="text-center mt-3 mb-3" md={4}>
-              Choose category and file to upload.
-            </Card.Title>
-            <Card.Body>
-              <Row>
-                <Col className="mx-auto">
-                  <Form
-                    className="text-center"
-                    action="/data"
-                    method="post"
-                    encType="multipart/form-data"
-                  >
-                    <Form.Group>
-                      <Form.Control
-                        as="select"
-                        className="mr-sm-2"
-                        label="Choose category."
-                        id="inlineFormCustomSelect"
-                        custom
-                        onChange={(e) => setUserChoice(e.target.value)}
-                      >
-                        <option value="0">Remixes</option>
-                        <option value="1">Dj sets</option>
-                        <option value="2">Original music</option>
-                        <option value="3">Projects</option>
-                      </Form.Control>
-                      <Form.File
-                        type="file"
-                        name="song"
-                        id="song"
-                        label="Choose audio file to upload."
-                        required
-                        className="mt-4"
-                        onChange={(e) => {
-                          setDuration(null);
-                          setFileName("");
-                          setFileType(null);
-                          const file = e.target.files[0];
-                          setFile(file);
-                          if (file !== null || file !== undefined) {
-                            getFileDuration(file);
-                            checkFileType(file);
-                          }
-                        }}
-                      />
-                      <ProgressBar className="mt-5" now={progress} />
-                    </Form.Group>
-                    <Button
-                      onClick={!isUploading ? handleUpload : undefined}
-                      className="mt-4"
-                      variant="success"
+                <Alert.Heading>Instruction. (Work in progress)</Alert.Heading>
+                <ul
+                  style={{
+                    paddingLeft: 0,
+                    listStylePosition: "inside",
+                    textAlign: "left",
+                  }}
+                >
+                  <li>Choose music category.</li>
+                  <li>Choose mp3 file to upload.</li>
+                  <li>
+                    Wait until all three fields in "Detected metadata" are
+                    filled. (1-5s.)
+                  </li>
+                  <li>Click upload.</li>
+                  <li>Message will appear when upload is completed.</li>
+                  <li>Refresh the page if you want to cancel the upload.</li>
+                  <br />
+                  <li>
+                    Ability to upload images & delete songs etc. will be added
+                    soon.
+                  </li>
+                  <li>
+                    You may expierience some random crashes of this system and
+                    it is expected at this point. (Simple refresh will bring
+                    things back to normal) There' still some work to do with
+                    stability and error handling of this system. Will fix that
+                    soon. 🙂
+                  </li>
+                </ul>
+              </Alert>
+            )}
+          </Col>
+        </Row>
+        <Row className="d-flex justify-content-center">
+          <Col lg={6}>
+            <Card className="mt-2 shadow p-3 mb-5 bg-white rounded">
+              <Card.Title className="text-center mt-2 mb-3" md={4}>
+                Choose category and file to upload.
+              </Card.Title>
+              <Card.Body>
+                <Row>
+                  <Col className="mx-auto">
+                    <Form
+                      className="text-center"
+                      action="/data"
+                      method="post"
+                      encType="multipart/form-data"
                     >
-                      Upload
-                    </Button>
-                    <Alert className="mt-3" variant="danger" show={alert}>
-                      {message}
-                    </Alert>
-                    <Alert className="mt-3" variant="success" show={completed}>
-                      Upload completed
-                    </Alert>
-                  </Form>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row className="d-flex justify-content-center">
-        <Col lg={6}>
-          <Card className="mt-5 shadow p-3 mb-5 bg-white rounded">
-            <Card.Title className="text-center mt-3 mb-3">
-              Detected metadata.
-            </Card.Title>
-            <Card.Body>
-              <Row>
-                <Col className="text-left">
-                  <p className="lead">
-                    <span className="font-weight-bold">Title: </span>
-                    {fileName}
-                  </p>
-                  <p className="lead">
-                    <span className="font-weight-bold">Duration: </span>
-                    {duration}
-                  </p>
-                  <p className="lead">
-                    <span className="font-weight-bold">File type: </span>
-                    {fileType}
-                  </p>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                      <Form.Group>
+                        <Form.Control
+                          disabled={isUploading}
+                          as="select"
+                          className="mr-sm-2"
+                          label="Choose category."
+                          id="inlineFormCustomSelect"
+                          custom
+                          onChange={(e) => setUserChoice(e.target.value)}
+                        >
+                          <option value="0">Remixes</option>
+                          <option value="1">Dj sets</option>
+                          <option value="2">Original music</option>
+                          <option value="3">Projects</option>
+                          <option value="4">Test</option>
+                        </Form.Control>
+                        <Form.File
+                          disabled={isUploading}
+                          type="file"
+                          name="song"
+                          id="song"
+                          label="Choose audio file to upload."
+                          required
+                          className="mt-4"
+                          onChange={(e) => {
+                            setAlert(false);
+                            setMessage(false);
+                            setDuration(null);
+                            setFileName("");
+                            setFileType(null);
+                            const file = e.target.files[0];
+                            setFile(file);
+                            if (file !== null || file !== undefined) {
+                              getFileDuration(file);
+                              checkFileType(file);
+                            }
+                          }}
+                        />
+                        <ProgressBar className="mt-5" now={progress} />
+                      </Form.Group>
+                      <Button
+                        onClick={!isUploading ? handleUpload : undefined}
+                        className="mt-4"
+                        variant="success"
+                      >
+                        Upload
+                      </Button>
+                      <Alert className="mt-3" variant="danger" show={alert}>
+                        {message}
+                      </Alert>
+                      <Alert
+                        className="mt-3"
+                        variant="success"
+                        show={completed}
+                      >
+                        Upload completed
+                      </Alert>
+                    </Form>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col lg={6}>
+            <Card className="mt-2 shadow p-3 mb-5 bg-white rounded">
+              <Card.Title className="text-center mt-3 mb-3">
+                Detected metadata.
+              </Card.Title>
+              <Card.Body>
+                <Row>
+                  <Col className="text-left">
+                    <p className="lead">
+                      <span className="font-weight-bold">Title: </span>
+                      {fileName}
+                    </p>
+                    <p className="lead">
+                      <span className="font-weight-bold">Duration: </span>
+                      {duration}
+                    </p>
+                    <p className="lead">
+                      <span className="font-weight-bold">File type: </span>
+                      {fileType}
+                    </p>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} className="pb-5">
+            <h3 className="display-5 pt-3 mb-4 text-light">
+              List of tracks in {setTableCategoryName(category)}
+            </h3>
+            {
+              <ListItems
+                isUploading={isUploading}
+                playlist={data}
+                load={loading}
+                handleDelete={handleDelete}
+              />
+            }
+          </Col>
+        </Row>
+      </Container>
     </Container>
   );
 };

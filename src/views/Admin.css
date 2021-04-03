@@ -1,0 +1,19 @@
+.customAdminBackground {
+  background: rgb(250, 68, 68);
+  background: -moz-linear-gradient(
+    267deg,
+    rgba(250, 68, 68, 1) 0%,
+    rgba(14, 122, 173, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    267deg,
+    rgba(250, 68, 68, 1) 0%,
+    rgba(14, 122, 173, 1) 100%
+  );
+  background: linear-gradient(
+    267deg,
+    rgba(250, 68, 68, 1) 0%,
+    rgba(14, 122, 173, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fa4444",endColorstr="#0e7aad",GradientType=1);
+}
