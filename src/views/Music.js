@@ -6,7 +6,6 @@ import cat1 from "../assets/category1.jpg";
 import cat2 from "../assets/category2.jpg";
 import cat3 from "../assets/category3.jpg";
 import cat4 from "../assets/category4.jpg";
-import cat5 from "../assets/category4.jpg";
 const Music = () => {
   return (
     <Container>
@@ -64,20 +63,6 @@ const Music = () => {
               <HeadingContainer image={cat4}>
                 <HeadingOverlay />
                 <Heading>Projects</Heading>
-              </HeadingContainer>
-            </Link>
-          </Card>
-        </Col>
-        <Col xl={6} lg={6}>
-          <Card className="position-relative">
-            <Link
-              style={{ textDecoration: "none" }}
-              className="overflow-hidden text-center"
-              to="/music/test"
-            >
-              <HeadingContainer image={cat5}>
-                <HeadingOverlay />
-                <Heading>Test</Heading>
               </HeadingContainer>
             </Link>
           </Card>

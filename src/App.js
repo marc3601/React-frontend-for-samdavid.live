@@ -16,10 +16,6 @@ import Category2 from "./views/categories/Category2";
 import Category3 from "./views/categories/Category3";
 import Category4 from "./views/categories/Category4";
 
-// TEST ONLY
-import Category5 from "./views/categories/Category5";
-// TEST ONLY
-
 import ScrollToTop from "./components/ScrollToTop";
 function App() {
   const [width, setWidth] = useState(null);
@@ -48,7 +44,6 @@ function App() {
             <Route exact path="/music/original-music" component={Category2} />
             <Route exact path="/music/dj-sets" component={Category3} />
             <Route exact path="/music/projects" component={Category4} />
-            <Route exact path="/music/test" component={Category5} />
             <Route exact path="/">
               <Home width={width} />
             </Route>

@@ -30,7 +30,29 @@ const Admin = () => {
   let container = [];
 
   const handleDelete = (item) => {
-    console.log(item.name);
+    const deleteRef = storageRef.child(`${category}/${item.name}`);
+    Promise.all([
+      deleteRef
+        .delete()
+        .then(() => {
+          console.log("File deleted");
+        })
+        .catch((error) => {
+          console.log("Delete failed " + error.message);
+        }),
+      db
+        .collection(category)
+        .doc(item.name)
+        .delete()
+        .then(() => {
+          console.log("Metadata deleted");
+        })
+        .catch((error) => {
+          console.error("Error removing document: ", error);
+        }),
+    ]).then((result) => {
+      downloadMusic(category);
+    });
   };
 
   const downloadMusic = (location) => {
@@ -135,30 +157,32 @@ const Admin = () => {
   };
 
   const checkFileType = (input) => {
-    const url = URL.createObjectURL(input);
-    const title = input.name.slice(0, input.name.length - 4);
-    fetch(url)
-      .then((response) => {
-        if (response.ok) {
-          return response.blob();
-        } else {
+    if (input.type) {
+      const url = URL.createObjectURL(input);
+      const title = input.name.slice(0, input.name.length - 4);
+      fetch(url)
+        .then((response) => {
+          if (response.ok) {
+            return response.blob();
+          } else {
+            setFileType(null);
+          }
+        })
+        .then(async (blob) => {
+          const type = await FileType.fromBlob(blob);
+          setFileType(type.ext);
+          if (type.ext === "mp3") {
+            setFileName(title);
+          } else setFileName("");
+        })
+        .catch((e) => {
           setFileType(null);
-        }
-      })
-      .then(async (blob) => {
-        const type = await FileType.fromBlob(blob);
-        setFileType(type.ext);
-        if (type.ext === "mp3") {
-          setFileName(title);
-        } else setFileName("");
-      })
-      .catch((e) => {
-        setFileType(null);
-        console.log(
-          "There has been a problem with your fetch operation: ",
-          e.message
-        );
-      });
+          console.log(
+            "There has been a problem with your fetch operation: ",
+            e.message
+          );
+        });
+    }
   };
 
   const getFileDuration = (input) => {
@@ -200,9 +224,6 @@ const Admin = () => {
       case "3":
         setCategory("projects");
         break;
-      case "4":
-        setCategory("test");
-        break;
       default:
         break;
     }
@@ -218,8 +239,6 @@ const Admin = () => {
         return "Original music.";
       case "projects":
         return "Projects.";
-      case "test":
-        return "Test.";
       default:
         break;
     }
@@ -247,6 +266,9 @@ const Admin = () => {
                   }}
                 >
                   <li>Choose music category.</li>
+                  <li>
+                    Check if the file title looks good. (Not too long etc.)
+                  </li>
                   <li>Choose mp3 file to upload.</li>
                   <li>
                     Wait until all three fields in "Detected metadata" are
@@ -254,12 +276,15 @@ const Admin = () => {
                   </li>
                   <li>Click upload.</li>
                   <li>Message will appear when upload is completed.</li>
-                  <li>Refresh the page if you want to cancel the upload.</li>
-                  <br />
                   <li>
-                    Ability to upload images & delete songs etc. will be added
-                    soon.
+                    List of song in choosen category will be automatically
+                    updated.
                   </li>
+                  <li>Refresh the page if you want to cancel the upload.</li>
+                  <li>
+                    Click delete button next to the file you want to remove.
+                  </li>
+                  <br />
                   <li>
                     You may expierience some random crashes of this system and
                     it is expected at this point. (Simple refresh will bring
@@ -301,7 +326,6 @@ const Admin = () => {
                           <option value="1">Dj sets</option>
                           <option value="2">Original music</option>
                           <option value="3">Projects</option>
-                          <option value="4">Test</option>
                         </Form.Control>
                         <Form.File
                           disabled={isUploading}
@@ -319,7 +343,7 @@ const Admin = () => {
                             setFileType(null);
                             const file = e.target.files[0];
                             setFile(file);
-                            if (file !== null || file !== undefined) {
+                            if (file !== null && file !== undefined) {
                               getFileDuration(file);
                               checkFileType(file);
                             }
@@ -387,6 +411,8 @@ const Admin = () => {
                 playlist={data}
                 load={loading}
                 handleDelete={handleDelete}
+                downloadMusic={downloadMusic}
+                category={category}
               />
             }
           </Col>
