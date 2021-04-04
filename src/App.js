@@ -15,8 +15,8 @@ import Category1 from "./views/categories/Category1";
 import Category2 from "./views/categories/Category2";
 import Category3 from "./views/categories/Category3";
 import Category4 from "./views/categories/Category4";
-import ScrollToTop from "./components/ScrollToTop";
 
+import ScrollToTop from "./components/ScrollToTop";
 function App() {
   const [width, setWidth] = useState(null);
 
