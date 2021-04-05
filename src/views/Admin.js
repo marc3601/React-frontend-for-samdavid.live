@@ -9,7 +9,6 @@ import {
   Row,
   ProgressBar,
   Alert,
-  // Modal,
 } from 'react-bootstrap';
 import {storageRef, db} from '../firebase';
 import ListItems from '../components/ListItems';
@@ -28,8 +27,6 @@ const Admin = () => {
   const [category, setCategory] = useState('remixes');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [deleteBox, setDeleteBox] = useState(false);
-  // const [confirm, setConfirm] = useState(false);
   let container = [];
 
   const handleDelete = (item, disable) => {
@@ -448,29 +445,6 @@ const Admin = () => {
         </svg>
         <p className="instr">Instructions</p>
       </div>
-      {/* <Modal
-        className="text-center"
-        show={deleteBox}
-        size="md"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        backdrop="static"
-      >
-        <Modal.Body>
-          <p>Are you sure you want to delete this file?</p>
-        </Modal.Body>
-        <Modal.Footer className="d-flex justify-content-center">
-          <Button onClick={() => setConfirm(true)} id="yes" variant="success">
-            Yes
-          </Button>
-          <Button onClick={() => {
-            setConfirm(false)
-            setDeleteBox(false)
-            }} id="no" variant="danger">
-            No
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </Container>
   );
 };
