@@ -29,7 +29,7 @@ const Category1 = () => {
 
   return (
     <Container sm={12}>
-      <h5 className="display-4 font-weight-bold text-center text-dark mb-4">
+      <h5 className="display-4 text-center text-dark mb-4">
         Remix
       </h5>
       {

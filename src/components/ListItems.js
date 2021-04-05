@@ -1,10 +1,11 @@
-import React from "react";
-import { Table, Button } from "react-bootstrap";
+import React from 'react';
+import {Table, Button} from 'react-bootstrap';
 const ListItems = ({
   playlist,
   load,
   isUploading,
-  handleDelete,
+  setIsUploading,
+  handleDelete
 }) => {
   return (
     <>
@@ -21,13 +22,13 @@ const ListItems = ({
           {!load ? (
             playlist.map((item, i) => (
               <tr key={i}>
-                <td style={{ width: "10%" }}>{i + 1}</td>
-                <td style={{ width: "20%" }}>Sam David</td>
+                <td style={{width: '10%'}}>{i + 1}</td>
+                <td style={{width: '20%'}}>Sam David</td>
                 <td>{item.name}</td>
-                <td style={{ width: "10%" }}>
+                <td style={{width: '10%'}}>
                   <Button
                     onClick={() => {
-                      handleDelete(item);
+                      handleDelete(item, setIsUploading);
                     }}
                     disabled={isUploading}
                     variant="danger"
@@ -39,10 +40,10 @@ const ListItems = ({
             ))
           ) : (
             <tr>
-              <td style={{ width: "10%" }}>Loading...</td>
-              <td style={{ width: "20%" }}>Loading...</td>
+              <td style={{width: '10%'}}>Loading...</td>
+              <td style={{width: '20%'}}>Loading...</td>
               <td>Loading...</td>
-              <td style={{ width: "10%" }}>Loading...</td>
+              <td style={{width: '10%'}}>Loading...</td>
             </tr>
           )}
         </tbody>

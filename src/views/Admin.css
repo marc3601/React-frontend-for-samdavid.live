@@ -17,3 +17,32 @@
   );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fa4444",endColorstr="#0e7aad",GradientType=1);
 }
+
+.question {
+  position: absolute;
+  top: 150px;
+  right: 50px;
+  cursor: pointer;
+}
+svg#quest {
+  display: block;
+  margin: auto;
+}
+.instr {
+  margin-top: 10px;
+  color: white;
+}
+
+@media (max-width: 576px) {
+  .question {
+    top: 113px;
+    right: 8px;
+  }
+  svg#quest {
+    height: 25px;
+    width: 25px;
+  }
+  .instr {
+    display: none;
+  }
+}
