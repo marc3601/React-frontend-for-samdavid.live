@@ -28,7 +28,7 @@ const Category3 = () => {
 
   return (
     <Container>
-       <h5 className="display-4 font-weight-bold text-center text-dark mb-4">Dj sets</h5>
+       <h5 className="display-4 text-center text-dark mb-4">Dj sets</h5>
       {<MusicPlayer playlist={data} load={loading} />}
     </Container>
   );

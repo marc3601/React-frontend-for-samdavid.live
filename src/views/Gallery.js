@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Image, Alert } from "react-bootstrap";
-import img1 from "../assets/sam1.jpg";
-import img2 from "../assets/sam2.jpg";
-import img3 from "../assets/sam3.jpg";
-import img4 from "../assets/sam4.jpg";
-import img5 from "../assets/sam5.jpg";
-import img6 from "../assets/sam6.jpg";
-import img7 from "../assets/sam7.jpg";
-import img8 from "../assets/sam8.jpg";
-import img9 from "../assets/sam9.jpg";
-import img10 from "../assets/sam10.jpg";
-import img11 from "../assets/sam11.jpg";
-import img12 from "../assets/sam12.jpeg";
-import img13 from "../assets/sam13.jpg";
-import img14 from "../assets/sam14.jpg";
-import Modal from "../components/Modal";
+import React, {useState} from 'react';
+import {Container, Row, Col, Image, Alert} from 'react-bootstrap';
+import img1 from '../assets/sam1.jpg';
+import img2 from '../assets/sam2.jpg';
+import img3 from '../assets/sam3.jpg';
+import img4 from '../assets/sam4.jpg';
+import img5 from '../assets/sam5.jpg';
+import img6 from '../assets/sam6.jpg';
+import img7 from '../assets/sam7.jpg';
+import img8 from '../assets/sam8.jpg';
+import img9 from '../assets/sam9.jpg';
+import img10 from '../assets/sam10.jpg';
+import img11 from '../assets/sam11.jpg';
+import img12 from '../assets/sam12.jpeg';
+import img13 from '../assets/sam13.jpg';
+import img14 from '../assets/sam14.jpg';
+import Modal from '../components/Modal';
 const arr1 = [
   img1,
   img2,
@@ -55,7 +55,7 @@ const Gallery = () => {
       <Row>
         {arr1.map((image, i) => (
           <Col
-            style={{ cursor: "pointer" }}
+            style={{cursor: 'pointer'}}
             onClick={modalHandlr}
             id={i}
             key={i}
