@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Table, Button, Modal} from 'react-bootstrap';
+import './ListItems.css';
 const ListItems = ({
   playlist,
   load,
@@ -12,8 +13,15 @@ const ListItems = ({
 
   return (
     <>
-      <Table striped bordered hover variant="dark" responsive>
-        <thead>
+      <Table
+        className="tableMain"
+        striped
+        bordered
+        hover
+        variant="dark"
+        responsive
+      >
+        <thead className="tableMain">
           <tr>
             <th>#</th>
             <th>Artist</th>
@@ -22,12 +30,17 @@ const ListItems = ({
           </tr>
         </thead>
         <tbody>
-          {!load ? (
+          {!load &&
             playlist.map((item, i) => (
               <tr key={i}>
                 <td style={{width: '10%'}}>{i + 1}</td>
                 <td style={{width: '20%'}}>Sam David</td>
-                <td>{item.name}</td>
+                <td>
+                  <div className="title_container">{item.name}</div>
+                  <div className="time_container">
+                    <span> {item.uploadTime || ''}</span>
+                  </div>
+                </td>
                 <td style={{width: '10%'}}>
                   <Button
                     onClick={() => {
@@ -36,20 +49,13 @@ const ListItems = ({
                     }}
                     disabled={isUploading}
                     variant="danger"
+                    className="btn_styles"
                   >
                     Delete
                   </Button>
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td style={{width: '10%'}}>Loading...</td>
-              <td style={{width: '20%'}}>Loading...</td>
-              <td>Loading...</td>
-              <td style={{width: '10%'}}>Loading...</td>
-            </tr>
-          )}
+            ))}
         </tbody>
       </Table>
       <Modal
@@ -69,7 +75,6 @@ const ListItems = ({
               handleDelete(active, setIsUploading);
               setDeleteBox(false);
             }}
-            id="yes"
             variant="success"
           >
             Yes
@@ -78,7 +83,6 @@ const ListItems = ({
             onClick={() => {
               setDeleteBox(false);
             }}
-            id="no"
             variant="danger"
           >
             No

@@ -1,0 +1,23 @@
+@media (max-width: 576px) {
+  .time_container {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .tableMain {
+    font-size: 0.8rem;
+  }
+  .btn_styles {
+    font-size: 0.7rem;
+  }
+  .title_container {
+    text-align: left;
+  }
+}
+
+.time_container {
+  font-size: 11px;
+  text-align: right;
+  color: darkgray;
+}
