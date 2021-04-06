@@ -13,6 +13,7 @@ import {
 import {storageRef, db} from '../firebase';
 import ListItems from '../components/ListItems';
 import './Admin.css';
+import {getDateTime} from '../components/utilities/getDateTime';
 const Admin = () => {
   const [file, setFile] = useState(null);
   const [alert, setAlert] = useState(false);
@@ -24,15 +25,13 @@ const Admin = () => {
   const [fileName, setFileName] = useState('');
   const [fileType, setFileType] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadTime, setUploadTime] = useState('');
   const [category, setCategory] = useState('remixes');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   let container = [];
 
   const handleDelete = (item, disable) => {
-    // setDeleteBox(true);
-   
-   
     disable(true);
     const deleteRef = storageRef.child(`${category}/${item.name}`);
     deleteRef
@@ -76,13 +75,14 @@ const Admin = () => {
   }, [category]);
 
   const handleUpload = (e) => {
+    e.preventDefault();
     if (fileType === 'mp3' && duration) {
-      e.preventDefault();
       setAlert(false);
       setCompleted(false);
-      var metadata = {
+      const metadata = {
         name: fileName,
         duration: duration,
+        uploadTime: uploadTime,
       };
       const uploadTask = storageRef
         .child(`${category}/${metadata.name}`)
@@ -111,6 +111,7 @@ const Admin = () => {
                 db.collection(category).doc(metadata.name).set({
                   name: data.name,
                   duration: duration,
+                  uploadTime: uploadTime,
                 });
               })
             );
@@ -342,6 +343,8 @@ const Admin = () => {
                             const file = e.target.files[0];
                             setFile(file);
                             if (file !== null && file !== undefined) {
+                              const time = getDateTime();
+                              setUploadTime(time);
                               getFileDuration(file);
                               checkFileType(file);
                             }
