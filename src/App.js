@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Navigation from "./components/Navigation";
-import Footer from "./components/Footer";
-import Home from "./views/Home";
-import Music from "./views/Music";
-import Gallery from "./views/Gallery";
-import Admin from "./views/Admin";
-import PrivateRoute from "./views/PrivateRoute";
-import LoginRender from "./views/LoginRender";
-import Category1 from "./views/categories/Category1";
-import Category2 from "./views/categories/Category2";
-import Category3 from "./views/categories/Category3";
-import Category4 from "./views/categories/Category4";
-
-import ScrollToTop from "./components/ScrollToTop";
+import React, {useState, useEffect} from 'react';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {AuthProvider} from './contexts/AuthContext';
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Navigation from './components/Navigation';
+import Footer from './components/Footer';
+import Home from './views/Home';
+import Music from './views/Music';
+import Gallery from './views/Gallery';
+import Admin from './views/Admin';
+import PrivateRoute from './views/PrivateRoute';
+import LoginRender from './views/LoginRender';
+import Category1 from './views/categories/Category1';
+import Category2 from './views/categories/Category2';
+import Category3 from './views/categories/Category3';
+import Category4 from './views/categories/Category4';
+import Images from './views/galleryCategories/Images';
+import Videos from './views/galleryCategories/Videos';
+import ScrollToTop from './components/ScrollToTop';
 function App() {
   const [width, setWidth] = useState(null);
 
   useEffect(() => {
-    window.addEventListener("load", () => {
+    window.addEventListener('load', () => {
       setWidth(parseInt(window.innerWidth.toFixed(0)));
     });
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       setWidth(parseInt(window.innerWidth.toFixed(0)));
     });
   }, [width]);
@@ -33,7 +34,7 @@ function App() {
     <Router>
       <ScrollToTop />
       <AuthProvider>
-        <div style={{ position: "relative" }} className="main">
+        <div style={{position: 'relative'}} className="main">
           <Navigation width={width} />
           <Switch>
             <Route exact path="/gallery" component={Gallery} />
@@ -44,6 +45,8 @@ function App() {
             <Route exact path="/music/original-music" component={Category2} />
             <Route exact path="/music/dj-sets" component={Category3} />
             <Route exact path="/music/projects" component={Category4} />
+            <Route exact path="/gallery/images" component={Images} />
+            <Route exact path="/gallery/videos" component={Videos} />
             <Route exact path="/">
               <Home width={width} />
             </Route>

@@ -1,72 +1,41 @@
-import React from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import cat1 from "../assets/category1.jpg";
-import cat2 from "../assets/category2.jpg";
-import cat3 from "../assets/category3.jpg";
-import cat4 from "../assets/category4.jpg";
+import React from 'react';
+import {Container, Row, Col, Card} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
+import styled from 'styled-components';
+import cat1 from '../assets/category1.jpg';
+import cat2 from '../assets/category2.jpg';
+import cat3 from '../assets/category3.jpg';
+import cat4 from '../assets/category4.jpg';
 const Music = () => {
+  const categories = [
+    {title: 'Remix', image: cat1, link: 'remix'},
+    {title: 'Dj Sets', image: cat2, link: 'dj-sets'},
+    {title: 'Original music', image: cat3, link: 'original-music'},
+    {title: 'Projects', image: cat4, link: 'projects'},
+  ];
   return (
     <Container>
       <h2 className="display-4 mb-2 mt-4 text-center text-dark">Music</h2>
-      <p className="lead text-dark text-center pt-2  mb-5">
+      <p className="lead text-dark text-center pt-2  mb-3">
         Explore music categories.
       </p>
       <Row className="justify-content-md-center">
-        <Col xl={6} lg={6}>
-          {" "}
-          <Card className="position-relative">
-            <Link
-              style={{ textDecoration: "none" }}
-              className="overflow-hidden text-center"
-              to="/music/remix"
-            >
-              <HeadingContainer image={cat1}>
-                <HeadingOverlay />
-                <Heading>Remix</Heading>
-              </HeadingContainer>
-            </Link>
-          </Card>
-          <Card className="position-relative">
-            <Link
-              style={{ textDecoration: "none" }}
-              className="overflow-hidden text-center"
-              to="/music/original-music"
-            >
-              <HeadingContainer image={cat2}>
-                <HeadingOverlay />
-                <Heading>Original music</Heading>
-              </HeadingContainer>
-            </Link>
-          </Card>
-        </Col>
-        <Col xl={6} lg={6}>
-          <Card className="position-relative">
-            <Link
-              style={{ textDecoration: "none" }}
-              className="overflow-hidden text-center"
-              to="/music/dj-sets"
-            >
-              <HeadingContainer image={cat3}>
-                <HeadingOverlay />
-                <Heading>Dj sets</Heading>
-              </HeadingContainer>
-            </Link>
-          </Card>
-          <Card className="position-relative">
-            <Link
-              style={{ textDecoration: "none" }}
-              className="overflow-hidden text-center"
-              to="/music/projects"
-            >
-              <HeadingContainer image={cat4}>
-                <HeadingOverlay />
-                <Heading>Projects</Heading>
-              </HeadingContainer>
-            </Link>
-          </Card>
-        </Col>
+        {categories.map((item, i) => (
+          <Col className="position-relative" key={i} id={i} xs={12} lg={6}>
+            <Card className="position-relative mb-4">
+              <Link
+                style={{textDecoration: 'none'}}
+                className="overflow-hidden text-center"
+                to={'/music/' + item.link}
+              >
+                <HeadingContainer image={item.image}>
+                  <HeadingOverlay />
+                  <Heading>{item.title}</Heading>
+                </HeadingContainer>
+              </Link>
+            </Card>
+          </Col>
+        ))}
       </Row>
     </Container>
   );
@@ -101,13 +70,16 @@ const HeadingContainer = styled.div`
   background-image: url(${(props) => props.image});
   height: 400px;
   text-align: center;
-  margin-bottom: 20px;
+  transition: all 0.5s;
   &:hover ${Heading} {
     font-size: 3.2rem;
     transform: translateY(-50%);
   }
   &:hover ${HeadingOverlay} {
     display: block;
+  }
+  &:hover {
+    transform: scale(1.1);
   }
   @media (max-width: 576px) {
     height: 330px;
