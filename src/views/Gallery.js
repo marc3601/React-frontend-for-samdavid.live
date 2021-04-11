@@ -11,7 +11,7 @@ const Gallery = () => {
   ];
 
   return (
-    <Container>
+    <Container className="pb-4">
       <h2 className="display-4 mb-4 mt-4 text-center text-dark">Gallery</h2>
       <Row className="justify-content-md-center">
         {categories.map((item, i) => (
