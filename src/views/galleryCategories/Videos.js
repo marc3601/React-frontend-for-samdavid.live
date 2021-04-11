@@ -5,9 +5,9 @@ import 'plyr-react/dist/plyr.css';
 import styled from 'styled-components';
 import vid1 from '../../assets/vid1.MP4';
 import vid2 from '../../assets/vid2.MP4';
-
-const arr1 = [vid1, vid2];
-
+import vid3 from '../../assets/vid3.MP4';
+import vid4 from '../../assets/vid4.MP4';
+const arr1 = [vid3, vid1, vid2, vid4];
 const Videos = () => {
   let source1 = [];
   let source2 = [];
