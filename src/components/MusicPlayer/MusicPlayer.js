@@ -276,7 +276,7 @@ const PlayerWrapper = styled.section`
   -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
-  margin-bottom: 1rem;
+  margin-bottom: 4rem;
 `;
 
 const Player = styled.section`

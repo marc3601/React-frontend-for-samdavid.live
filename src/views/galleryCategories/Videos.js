@@ -1,59 +1,19 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
-import Plyr from 'plyr-react';
-import 'plyr-react/dist/plyr.css';
-import styled from 'styled-components';
+import {handleVideoRendering} from '../../components/utilities/handleVideoRendering';
 import vid1 from '../../assets/vid1.MP4';
 import vid2 from '../../assets/vid2.MP4';
 import vid3 from '../../assets/vid3.MP4';
 import vid4 from '../../assets/vid4.MP4';
+
 const arr1 = [vid3, vid1, vid2, vid4];
 const Videos = () => {
-  let source1 = [];
-  let source2 = [];
+  const [data, setData] = useState([]);
 
-  const handleVideoRendering = (input) => {
-    let newArr = [];
-    let newAr2 = [];
-    const lnght = input.length;
-    const firstArrLenght = Math.round(lnght / 2);
-    newArr = input.slice(0, firstArrLenght);
-    newAr2 = input.slice(firstArrLenght, input.length);
-    newArr.forEach((item) => {
-      source1.push({
-        type: 'video',
-        sources: [
-          {
-            src: item,
-          },
-        ],
-        options: [
-          {
-            muted: true,
-            autopause: true,
-            enabled: false,
-          },
-        ],
-      });
-    });
-    newAr2.forEach((item) => {
-      source2.push({
-        type: 'video',
-        sources: [
-          {
-            src: item,
-          },
-        ],
-        options: [
-          {
-            muted: true,
-            autopause: true,
-          },
-        ],
-      });
-    });
-  };
-  handleVideoRendering(arr1);
+  useEffect(() => {
+    setData(arr1);
+    handleVideoRendering(data);
+  }, [data]);
 
   return (
     <Container>
@@ -61,38 +21,16 @@ const Videos = () => {
         Videos
       </h2>
       <Row>
-        <Col sm={12} lg={6}>
-          {source1.map((vid, i) => (
-            <VideoContainer key={i}>
-              <Plyr
-                source={vid}
-                options={{
-                  volume: 0,
-                }}
-              />
-            </VideoContainer>
-          ))}
-        </Col>
-        <Col sm={12} lg={6}>
-          {source2.map((vid, i) => (
-            <VideoContainer key={i}>
-              <Plyr
-                source={vid}
-                options={{
-                  volume: 0,
-                }}
-              />
-            </VideoContainer>
-          ))}
-        </Col>
+        {data.length > 0 ? (
+          handleVideoRendering(data)
+        ) : (
+          <Col>
+            <h2 className="text-center">Loading videos...</h2>
+          </Col>
+        )}
       </Row>
     </Container>
   );
 };
 
 export default Videos;
-
-const VideoContainer = styled.div`
-  box-shadow: 0px 0px 24px -6px rgba(0, 0, 0, 0.75);
-  margin-bottom: 1rem;
-`;
