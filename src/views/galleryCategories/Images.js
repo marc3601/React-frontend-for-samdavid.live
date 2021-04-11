@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Container, Row, Col, Image, Alert} from 'react-bootstrap';
+import {Container, Row, Col, Image} from 'react-bootstrap';
 import img1 from '../../assets/sam1.jpg';
 import img2 from '../../assets/sam2.jpg';
 import img3 from '../../assets/sam3.jpg';
@@ -29,7 +29,6 @@ const arr1 = [
 ];
 
 const Images = () => {
-  const [alert, setAlert] = useState(true);
   const [modal, isModalActive] = useState(false);
   const [currentImage, setCurentImage] = useState(null);
 
@@ -42,12 +41,7 @@ const Images = () => {
       <h2 className="display-4 mb-4 mt-4 pb-4 text-center text-dark border-bottom">
         Images
       </h2>
-      {alert && (
-        <Alert onClose={() => setAlert(false)} dismissible variant="danger">
-          <Alert.Heading>Work in progress.</Alert.Heading>
-          Not all features are available yet.
-        </Alert>
-      )}
+
       <Row>
         {arr1.map((image, i) => (
           <Col

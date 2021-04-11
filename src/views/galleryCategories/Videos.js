@@ -1,58 +1,98 @@
-import React, {useState, useEffect} from 'react';
-import {Container, Row, Col, Alert} from 'react-bootstrap';
+import React from 'react';
+import {Container, Row, Col} from 'react-bootstrap';
 import Plyr from 'plyr-react';
 import 'plyr-react/dist/plyr.css';
+import styled from 'styled-components';
 import vid1 from '../../assets/vid1.MP4';
 import vid2 from '../../assets/vid2.MP4';
 import vid3 from '../../assets/vid3.MP4';
-const arr1 = [vid1, vid2, vid3];
-
+import vid4 from '../../assets/vid4.MP4';
+const arr1 = [vid3, vid1, vid2, vid4];
 const Videos = () => {
-  const [alert, setAlert] = useState(true);
-  const newArr = [];
+  let source1 = [];
+  let source2 = [];
 
-  arr1.forEach((item) => {
-    newArr.push({
-      type: 'video',
-      sources: [
-        {
-          src: item,
-        },
-      ],
-      options: [
-        {
-          muted: true,
-          autopause: true,
-        },
-      ],
+  const handleVideoRendering = (input) => {
+    let newArr = [];
+    let newAr2 = [];
+    const lnght = input.length;
+    const firstArrLenght = Math.round(lnght / 2);
+    newArr = input.slice(0, firstArrLenght);
+    newAr2 = input.slice(firstArrLenght, input.length);
+    newArr.forEach((item) => {
+      source1.push({
+        type: 'video',
+        sources: [
+          {
+            src: item,
+          },
+        ],
+        options: [
+          {
+            muted: true,
+            autopause: true,
+            enabled: false,
+          },
+        ],
+      });
     });
-  });
+    newAr2.forEach((item) => {
+      source2.push({
+        type: 'video',
+        sources: [
+          {
+            src: item,
+          },
+        ],
+        options: [
+          {
+            muted: true,
+            autopause: true,
+          },
+        ],
+      });
+    });
+  };
+  handleVideoRendering(arr1);
 
   return (
     <Container>
       <h2 className="display-4 mb-4 mt-4 pb-4 text-center text-dark border-bottom">
         Videos
       </h2>
-      {alert && (
-        <Alert onClose={() => setAlert(false)} dismissible variant="danger">
-          <Alert.Heading>Work in progress.</Alert.Heading>
-          Not all features are available yet.
-        </Alert>
-      )}
       <Row>
-        {newArr.map((vid, i) => (
-          <Col className="mb-3" id={i} key={i} xs={12} sm={12} lg={6}>
-            <Plyr
-              source={vid}
-              options={{
-                volume: 0,
-              }}
-            />
-          </Col>
-        ))}
+        <Col sm={12} lg={6}>
+          {source1.map((vid, i) => (
+            <VideoContainer key={i}>
+              <Plyr
+                source={vid}
+                options={{
+                  volume: 0,
+                }}
+              />
+            </VideoContainer>
+          ))}
+        </Col>
+        <Col sm={12} lg={6}>
+          {source2.map((vid, i) => (
+            <VideoContainer key={i}>
+              <Plyr
+                source={vid}
+                options={{
+                  volume: 0,
+                }}
+              />
+            </VideoContainer>
+          ))}
+        </Col>
       </Row>
     </Container>
   );
 };
 
 export default Videos;
+
+const VideoContainer = styled.div`
+  box-shadow: 0px 0px 24px -6px rgba(0, 0, 0, 0.75);
+  margin-bottom: 1rem;
+`;
