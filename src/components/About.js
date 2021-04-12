@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Image, Button } from "react-bootstrap";
-import about from "../assets/about.jpg";
+import about from "../assets/about.jpeg";
 import "./About.css";
 const About = () => {
   const [more, setMore] = useState(false);

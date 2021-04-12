@@ -34,7 +34,7 @@ function App() {
     <Router>
       <ScrollToTop />
       <AuthProvider>
-        <div style={{position: 'relative'}} className="main">
+        <div className="main">
           <Navigation width={width} />
           <Switch>
             <Route exact path="/gallery" component={Gallery} />

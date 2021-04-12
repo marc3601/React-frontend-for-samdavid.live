@@ -1,13 +1,12 @@
-import React from 'react';
 
 const Tiktok = () => {
   return (
     <svg
       id="tik tok"
       enableBackground="new 0 0 512 512"
-      height="30px"
+      height="25px"
       viewBox="0 0 512 512"
-      width="30px"
+      width="25px"
       xmlns="http://www.w3.org/2000/svg"
     >
       <g>
