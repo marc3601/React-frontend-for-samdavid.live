@@ -4,13 +4,14 @@ import main_logo from '../assets/logo.png';
 import Facebook from './utilities/logos/Facebook';
 import Instagram from './utilities/logos/Instagram';
 import Tiktok from './utilities/logos/Tiktok';
+import Whatsapp from './utilities/logos/Whatsapp';
 
 const Footer = () => {
   return (
     <footer className="footer">
       <Container
         fluid
-        className="pt-4 pb-3"
+        className="p-4"
         style={{boxShadow: 'inset 0px 4px 2px -3px rgba(0,0,0,0.72)'}}
       >
         <h4 className="display-5 text-center">Contact</h4>
@@ -23,21 +24,55 @@ const Footer = () => {
           </Col>
           <Col>
             <div className="facebook mt-3">
-              <a className="text-dark" href="https://www.facebook.com/">
+              <a
+                className="text-dark"
+                rel="noreferrer"
+                target="_blank"
+                href="https://www.facebook.com/DjSamDavid1"
+              >
                 <Facebook />
-                <span className="ml-2">facebook.com</span>
+                <span style={{fontSize: '.8rem'}} className="ml-2">
+                  DjSamDavid1
+                </span>
               </a>
             </div>
             <div className="instagram mt-3">
-              <a className="text-dark" href="https://www.instagram.com/">
+              <a
+                rel="noreferrer"
+                target="_blank"
+                className="text-dark"
+                href="https://www.instagram.com/djsamdavid619/"
+              >
                 <Instagram />
-                <span className="ml-2">instagram.com</span>
+                <span style={{fontSize: '.8rem'}} className="ml-2">
+                  djsamdavid619
+                </span>
               </a>
             </div>
             <div className="tiktok mt-3">
-              <a className="text-dark" href="https://www.tiktok.com/">
+              <a
+                rel="noreferrer"
+                target="_blank"
+                className="text-dark"
+                href="https://vm.tiktok.com/ZMeaCUXr6/"
+              >
                 <Tiktok />
-                <span className="ml-2">tiktok.com</span>
+                <span style={{fontSize: '.8rem'}} className="ml-2">
+                  djsamdavid
+                </span>
+              </a>
+            </div>
+            <div className="whatsapp mt-3">
+              <a
+                rel="noreferrer"
+                target="_blank"
+                className="text-dark"
+                href="https://wa.me/8613738745657"
+              >
+                <Whatsapp />
+                <span style={{fontSize: '.8rem'}} className="ml-2">
+                  +8613738745657
+                </span>
               </a>
             </div>
           </Col>
