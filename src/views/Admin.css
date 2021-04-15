@@ -43,6 +43,12 @@ svg#quest {
   outline: none;
   border-bottom: 1px solid black;
 }
+a {
+  color: white;
+}
+a:hover {
+  color: white;
+}
 
 @media (max-width: 576px) {
   .question {
@@ -60,6 +66,5 @@ svg#quest {
     margin-left: 0;
     margin-top: 10px;
     width: 90%;
-    
   }
 }
