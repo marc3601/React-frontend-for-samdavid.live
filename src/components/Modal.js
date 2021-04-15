@@ -5,7 +5,7 @@ const Modal = ({ modal, img, currentImage }) => {
     <Wrapper onClick={modal}>
       <Background></Background>
       <ImageWrapper>
-        <Image src={img[currentImage]} />
+        <Image src={img[currentImage].imageSrc} />
       </ImageWrapper>
     </Wrapper>
   );

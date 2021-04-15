@@ -1,6 +1,6 @@
 import FileType from 'file-type/browser';
 
-const checkFileType = (input, setFileType, setFileName) => {
+const checkFileType = (input, setFileType, setFileName, ext) => {
   if (input.type) {
     const url = URL.createObjectURL(input);
     const title = input.name.slice(0, input.name.length - 4);
@@ -15,7 +15,7 @@ const checkFileType = (input, setFileType, setFileName) => {
       .then(async (blob) => {
         const type = await FileType.fromBlob(blob);
         setFileType(type.ext);
-        if (type.ext === 'mp3') {
+        if (type.ext === ext) {
           setFileName(title);
         } else setFileName('');
       })
