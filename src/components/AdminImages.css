@@ -1,0 +1,32 @@
+.image_container {
+  position: relative;
+}
+.image_plc {
+  min-width: 255px;
+  min-height: 169px;
+  background-color: rgb(73, 73, 73);
+}
+.image_delete {
+  position: absolute;
+  top: 0.8rem;
+  right: 1.3rem;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: red;
+  border: none;
+  box-shadow: 0 0 8px 4px rgb(0 0 0 / 16%);
+  transition: 0.2s ease;
+}
+.image_delete:hover {
+  width: 47px;
+  height: 47px;
+}
+
+.button_inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
