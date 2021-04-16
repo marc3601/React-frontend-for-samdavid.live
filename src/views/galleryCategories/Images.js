@@ -36,7 +36,6 @@ const Images = () => {
       <h2 className="display-4 mb-4 mt-4 pb-4 text-center text-dark border-bottom">
         Images
       </h2>
-
       {!loading ? (
         <>
           <Row>
@@ -50,7 +49,11 @@ const Images = () => {
                 sm={6}
                 lg={6}
               >
-                <Image className="w-100 pb-3" src={image.imageSrc} />
+                <Image
+                  onLoadedDataCapture={() => console.log('LOADED')}
+                  className="w-100 pb-3"
+                  src={image.imageSrc}
+                />
               </Col>
             ))}
           </Row>

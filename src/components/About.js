@@ -7,8 +7,8 @@ const About = () => {
   return (
     <div className="about">
       <Container>
-        <h3 className="custom_h2 lead display-3 text-dark pt-5 pb-3">
-          Music is a state of mind. It gives wings to the mind to surf the
+        <h3 className="custom_h2 lead display-3 text-dark pt-5 pb-4">
+          Music is a state of mind. It gives you wings to surf the
           universe.
         </h3>
         <Row>

@@ -13,6 +13,7 @@ import {
 } from 'react-bootstrap';
 import {storageRef, db} from '../firebase';
 import ListItems from '../components/ListItems';
+import AdminImages from '../components/AdminImages';
 import QuestionMark from '../components/utilities/logos/QuestionMark';
 import './Admin.css';
 import {getDateTime} from '../components/utilities/getDateTime';
@@ -34,9 +35,10 @@ const Admin = () => {
   const [uploadTime, setUploadTime] = useState('');
   const [category, setCategory] = useState('remixes');
   const [music, setMusic] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
   let container = [];
-
+  let storedImages = [];
   const [key, setKey] = useState('music');
 
   const handleDelete = (item, disable) => {
@@ -63,8 +65,34 @@ const Admin = () => {
         }, 2000);
       });
   };
+  const handleImageDelete = (item, disable) => {
+    disable(true);
+    const deleteRef = storageRef.child(`images/${item.name}`);
+    deleteRef
+      .delete()
+      .then(() => {
+        db.collection('images')
+          .doc(item.name)
+          .delete()
+          .then(() => {
+            downloadImages('images');
+            disable(false);
+          });
+      })
+      .catch((e) => {
+        console.log(e);
+        setAlert(true);
+        setMessage("It appears there's no such file in database!");
+        disable(false);
+        setTimeout(() => {
+          setAlert(false);
+          setMessage('');
+        }, 2000);
+      });
+  };
 
   const downloadMusic = (location) => {
+    setLoading(true);
     db.collection(location)
       .get()
       .then((querySnapshot) => {
@@ -78,9 +106,25 @@ const Admin = () => {
       });
   };
 
+  const downloadImages = (category) => {
+    setLoading(true);
+    db.collection(category)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          storedImages.push(doc.data());
+        });
+      })
+      .finally(() => {
+        setImages(storedImages);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    downloadMusic(category);
-  }, [category]);
+    key === 'music' && downloadMusic(category);
+    key === 'images' && downloadImages('images');
+  }, [category, key]);
 
   const handleMusicUpload = (e) => {
     e.preventDefault();
@@ -223,6 +267,9 @@ const Admin = () => {
               setDuration(null);
               setFileName('');
               setFileType(null);
+              setTimeout(() => {
+                downloadImages('images');
+              }, 500);
             })
             .catch((err) => {
               setIsUploading(false);
@@ -563,6 +610,12 @@ const Admin = () => {
                 </Card>
               </Col>
             </Row>
+            <AdminImages
+              images={images}
+              load={loading}
+              handleDelete={handleImageDelete}
+              setIsUploading={setIsUploading}
+            />
           </Tab>
           <Tab eventKey="videos" title="Videos" disabled>
             Videos
