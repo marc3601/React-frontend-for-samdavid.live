@@ -20,7 +20,8 @@ Custom build music player with styled components.
 
 ## Admin panel - music and images uploading system.
 
-Simple CMS built with firebase.
+Simple CMS built with firebase. [Admin Panel login](https://samdavid.live/login)
+
 
 ![Main website](readme_img/music.png)
 
