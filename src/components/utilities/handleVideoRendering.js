@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import {Col} from 'react-bootstrap';
 import Plyr from 'plyr-react';
@@ -12,19 +11,31 @@ export const handleVideoRendering = (input) => {
   const firstArrLenght = Math.round(lnght / 2);
   newArr = input.slice(0, firstArrLenght);
   newAr2 = input.slice(firstArrLenght, input.length);
+  const controls = [
+    'play-large', // The large play button in the center
+    //'restart', // Restart playback
+    'rewind', // Rewind by the seek time (default 10 seconds)
+    'play', // Play/pause playback
+    'fast-forward', // Fast forward by the seek time (default 10 seconds)
+    'progress', // The progress bar and scrubber for playback and buffering
+    'current-time', // The current time of playback
+    'duration', // The full duration of the media
+    'mute', // Toggle mute
+    'volume', // Volume control
+    'captions', // Toggle captions
+    'settings', // Settings menu
+    'pip', // Picture-in-picture (currently Safari only)
+    'airplay', // Airplay (currently Safari only)
+    'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
+    'fullscreen', // Toggle fullscreen
+  ];
   newArr.forEach((item) => {
     source1.push({
       type: 'video',
       sources: [
         {
           src: item,
-        },
-      ],
-      options: [
-        {
-          muted: true,
-          autopause: true,
-          enabled: false,
+          type: 'video/mp4',
         },
       ],
     });
@@ -35,12 +46,7 @@ export const handleVideoRendering = (input) => {
       sources: [
         {
           src: item,
-        },
-      ],
-      options: [
-        {
-          muted: true,
-          autopause: true,
+          type: 'video/mp4',
         },
       ],
     });
@@ -51,12 +57,7 @@ export const handleVideoRendering = (input) => {
         {source1.length > 0 &&
           source1.map((vid, i) => (
             <VideoContainer key={i}>
-              <Plyr
-                source={vid}
-                options={{
-                  volume: 0,
-                }}
-              />
+              <Plyr source={vid} options={controls} />
             </VideoContainer>
           ))}
       </Col>
@@ -64,12 +65,7 @@ export const handleVideoRendering = (input) => {
         {source2.length > 0 &&
           source2.map((vid, i) => (
             <VideoContainer key={i}>
-              <Plyr
-                source={vid}
-                options={{
-                  volume: 0,
-                }}
-              />
+              <Plyr source={vid} options={controls} />
             </VideoContainer>
           ))}
       </Col>
