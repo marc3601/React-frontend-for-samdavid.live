@@ -17,6 +17,8 @@ import AdminImages from '../components/AdminImages';
 import QuestionMark from '../components/utilities/logos/QuestionMark';
 import './Admin.css';
 import {getDateTime} from '../components/utilities/getDateTime';
+import {handleImageUpload} from '../components/utilities/mainFunctions';
+import {handleMusicUpload} from '../components/utilities/mainFunctions';
 import setTableCategoryName from '../components/utilities/setTableCategoryName';
 import setUserChoice from '../components/utilities/setUserChoice';
 import getFileDuration from '../components/utilities/getFileDuration';
@@ -37,11 +39,11 @@ const Admin = () => {
   const [music, setMusic] = useState([]);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [key, setKey] = useState('music');
   let container = [];
   let storedImages = [];
-  const [key, setKey] = useState('music');
 
-  const handleDelete = (item, disable) => {
+  const handleMusicDelete = (item, disable) => {
     disable(true);
     const deleteRef = storageRef.child(`${category}/${item.name}`);
     deleteRef
@@ -125,170 +127,6 @@ const Admin = () => {
     key === 'music' && downloadMusic(category);
     key === 'images' && downloadImages('images');
   }, [category, key]);
-
-  const handleMusicUpload = (e) => {
-    e.preventDefault();
-    if (
-      fileType === 'mp3' &&
-      fileName.length !== 0 &&
-      !/^ *$/.test(fileName) &&
-      duration
-    ) {
-      setAlert(false);
-      setCompleted(false);
-      const metadata = {
-        name: fileName,
-        duration: duration,
-        uploadTime: uploadTime,
-      };
-      const uploadTask = storageRef
-        .child(`${category}/${metadata.name}`)
-        .put(file, metadata);
-
-      setProgress(0);
-      uploadTask.on(
-        'state_changed',
-        (snapschot) => {
-          setIsUploading(true);
-          const progress = Math.round(
-            (snapschot.bytesTransferred / snapschot.totalBytes) * 100
-          );
-          setProgress(progress);
-        },
-        (err) => {
-          setIsUploading(false);
-          setProgress(0);
-          setAlert(true);
-          setMessage(err.message);
-        },
-        () => {
-          const audioDataUpload = new Promise((resolve, reject) => {
-            resolve(
-              uploadTask.snapshot.ref.getMetadata().then((data) => {
-                db.collection(category).doc(metadata.name).set({
-                  name: data.name,
-                  duration: duration,
-                  uploadTime: uploadTime,
-                });
-              })
-            );
-          });
-
-          audioDataUpload
-            .then(() => {
-              uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                db.collection(category).doc(metadata.name).update({
-                  musicSrc: downloadURL,
-                });
-              });
-            })
-            .then(() => {
-              setIsUploading(false);
-              setCompleted(true);
-              setDuration(null);
-              setFileName('');
-              setFileType(null);
-              downloadMusic(category);
-            })
-            .catch((err) => {
-              setIsUploading(false);
-              setProgress(0);
-              setAlert(true);
-              setMessage(err.message);
-            });
-        }
-      );
-    } else {
-      if (file == null || fileType !== 'mp3') {
-        setAlert(true);
-        setMessage('Please choose mp3 file.');
-      } else if (duration === null) {
-        setAlert(true);
-        setMessage('Wait a second... Duration data is being loaded.');
-      } else if (fileName.length === 0 || /^ *$/.test(fileName)) {
-        setAlert(true);
-        setMessage('Filename cannot be empty.');
-      }
-    }
-  };
-
-  const handleImageUpload = (e) => {
-    e.preventDefault();
-    if (fileType === 'jpg' && fileName.length !== 0 && !/^ *$/.test(fileName)) {
-      setAlert(false);
-      setCompleted(false);
-      const metadata = {
-        name: fileName,
-        uploadTime: uploadTime,
-      };
-      const uploadTask = storageRef
-        .child(`images/${metadata.name}`)
-        .put(file, metadata);
-
-      setProgress(0);
-      uploadTask.on(
-        'state_changed',
-        (snapschot) => {
-          setIsUploading(true);
-          const progress = Math.round(
-            (snapschot.bytesTransferred / snapschot.totalBytes) * 100
-          );
-          setProgress(progress);
-        },
-        (err) => {
-          setIsUploading(false);
-          setProgress(0);
-          setAlert(true);
-          setMessage(err.message);
-        },
-        () => {
-          const imageDataUpload = new Promise((resolve, reject) => {
-            resolve(
-              uploadTask.snapshot.ref.getMetadata().then((data) => {
-                db.collection('images').doc(metadata.name).set({
-                  name: data.name,
-                  uploadTime: uploadTime,
-                });
-              })
-            );
-          });
-
-          imageDataUpload
-            .then(() => {
-              uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                db.collection('images').doc(metadata.name).update({
-                  imageSrc: downloadURL,
-                });
-              });
-            })
-            .then(() => {
-              setIsUploading(false);
-              setCompleted(true);
-              setDuration(null);
-              setFileName('');
-              setFileType(null);
-              setTimeout(() => {
-                downloadImages('images');
-              }, 500);
-            })
-            .catch((err) => {
-              setIsUploading(false);
-              setProgress(0);
-              setAlert(true);
-              setMessage(err.message);
-            });
-        }
-      );
-    } else {
-      if (file == null || fileType !== 'jpg') {
-        setAlert(true);
-        setMessage('Please choose jpg file.');
-      } else if (fileName.length === 0 || /^ *$/.test(fileName)) {
-        setAlert(true);
-        setMessage('Filename cannot be empty.');
-      }
-    }
-  };
 
   return (
     <Container fluid className="customAdminBackground">
@@ -435,7 +273,29 @@ const Admin = () => {
                           </Form.Group>
                           <Button
                             onClick={
-                              !isUploading ? handleMusicUpload : undefined
+                              !isUploading
+                                ? (e) =>
+                                    handleMusicUpload(
+                                      e,
+                                      fileType,
+                                      fileName,
+                                      duration,
+                                      setAlert,
+                                      setCompleted,
+                                      uploadTime,
+                                      storageRef,
+                                      category,
+                                      file,
+                                      setProgress,
+                                      setIsUploading,
+                                      setMessage,
+                                      db,
+                                      setDuration,
+                                      setFileName,
+                                      downloadMusic,
+                                      setFileType
+                                    )
+                                : undefined
                             }
                             className="mt-4"
                             variant="success"
@@ -501,7 +361,7 @@ const Admin = () => {
                   isUploading={isUploading}
                   playlist={music}
                   load={loading}
-                  handleDelete={handleDelete}
+                  handleDelete={handleMusicDelete}
                   setIsUploading={setIsUploading}
                 />
               </Col>
@@ -557,7 +417,27 @@ const Admin = () => {
                           </Form.Group>
                           <Button
                             onClick={
-                              !isUploading ? handleImageUpload : undefined
+                              !isUploading
+                                ? (e) =>
+                                    handleImageUpload(
+                                      e,
+                                      fileType,
+                                      fileName,
+                                      setAlert,
+                                      setCompleted,
+                                      uploadTime,
+                                      storageRef,
+                                      file,
+                                      setProgress,
+                                      setIsUploading,
+                                      setMessage,
+                                      db,
+                                      setDuration,
+                                      setFileName,
+                                      setFileType,
+                                      downloadImages
+                                    )
+                                : undefined
                             }
                             className="mt-4"
                             variant="success"
