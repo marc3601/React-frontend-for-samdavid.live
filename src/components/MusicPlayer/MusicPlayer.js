@@ -1,20 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
-import { Alert } from "react-bootstrap";
-import PlayButton from "./PlayButton";
-import ForwardButton from "./ForwardButton";
-import PauseButton from "./PauseButton";
-import VolumeLogo from "./VolumeLogo";
-import MutedLogo from "./MutedLogo";
-import TrackSymbol from "./TrackSymbol";
-import Equilizer from "./Equilizer";
-import TrackLoading from "./TrackLoading";
-import RewindButton from "./RewindButton";
+import React, {useState, useRef, useEffect} from 'react';
+import styled from 'styled-components';
+import PlayButton from './PlayButton';
+import ForwardButton from './ForwardButton';
+import PauseButton from './PauseButton';
+import VolumeLogo from './VolumeLogo';
+import MutedLogo from './MutedLogo';
+import TrackSymbol from './TrackSymbol';
+import Equilizer from './Equilizer';
+import TrackLoading from './TrackLoading';
+import RewindButton from './RewindButton';
 
-const MusicPlayer = ({ playlist, load, desc }) => {
+const MusicPlayer = ({playlist, load, desc}) => {
   const [playIcon, setPlayIcon] = useState(true);
-  const [audioDuration, setAudioDuration] = useState("00:00");
-  const [currentTime, setCurrentTime] = useState("00:00");
+  const [audioDuration, setAudioDuration] = useState('00:00');
+  const [currentTime, setCurrentTime] = useState('00:00');
   const [percentage, setPercentage] = useState(0);
   const [activeTrackID, setActiveTrackID] = useState(0);
   const [muted, setMuted] = useState(false);
@@ -35,9 +34,9 @@ const MusicPlayer = ({ playlist, load, desc }) => {
 
   // Converts audio duration in seconds to 00:00 format.
   const convertAudioDuration = (convert) => {
-    var minutes = "0" + Math.floor(convert / 60);
-    var seconds = "0" + Math.floor(convert - minutes * 60);
-    var dur = minutes.substr(-2) + ":" + seconds.substr(-2);
+    var minutes = '0' + Math.floor(convert / 60);
+    var seconds = '0' + Math.floor(convert - minutes * 60);
+    var dur = minutes.substr(-2) + ':' + seconds.substr(-2);
     return dur;
   };
 
@@ -181,23 +180,23 @@ const MusicPlayer = ({ playlist, load, desc }) => {
         <SongTitle>
           {!load &&
             playlist.length === 0 &&
-            "Playlist empty or content blocked."}
+            'Playlist empty or content blocked.'}
           {!load &&
             playlist.length > 0 &&
             playlist[activeTrackID ? activeTrackID : 0].name}
         </SongTitle>
         <SongSubTitle>
-          {!load && playlist.length === 0 && "In China consider using VPN."}
-          {!load && playlist.length > 0 && "Sam David"}
+          {!load && playlist.length === 0 && 'In China consider using VPN.'}
+          {!load && playlist.length > 0 && 'Sam David'}
         </SongSubTitle>
       </Player>
       <PlayList>
         <PlaylistHeader>
           <PlaylistTitle>
-            {desc ? desc.title : "Default playlist"}
+            {desc ? desc.title : 'Default playlist'}
           </PlaylistTitle>
           <PlaylistInfo>
-            {desc ? desc.desc : "Default description"}
+            {desc ? desc.desc : 'Default description'}
           </PlaylistInfo>
         </PlaylistHeader>
 
@@ -223,14 +222,14 @@ const MusicPlayer = ({ playlist, load, desc }) => {
                   </TrackIcon>
                   <TrackInfo>
                     <TrackTitle>
-                      {track.name ? track.name : "Default"}
+                      {track.name ? track.name : 'Default'}
                     </TrackTitle>
                     <TrackSubTitle>
-                      {track.artist ? track.artist : "Sam David"}
+                      {track.artist ? track.artist : 'Sam David'}
                     </TrackSubTitle>
                   </TrackInfo>
                   <TrackSubTitle>
-                    {track.duration ? track.duration : "00:00"}
+                    {track.duration ? track.duration : '00:00'}
                   </TrackSubTitle>
                 </PlaylistTrack>
               );
@@ -257,8 +256,9 @@ const MusicPlayer = ({ playlist, load, desc }) => {
         src={
           !load && playlist.length > 0
             ? playlist[activeTrackID ? activeTrackID : 0].musicSrc
-            : ""
+            : ''
         }
+        onWaiting={() => setLoading(true)}
         muted={muted}
       />
     </PlayerWrapper>
@@ -316,7 +316,7 @@ const ProgressBar = styled.div`
 `;
 
 const Input = styled.input.attrs((props) => ({
-  type: "range",
+  type: 'range',
   min: 0,
   max: 100,
   step: 0.1,
@@ -428,7 +428,7 @@ const VolumeSliderContainer = styled.div`
   }
 `;
 const VolumeSlider = styled.input.attrs((props) => ({
-  type: "range",
+  type: 'range',
   min: 0,
   max: 1,
   step: 0.01,
