@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import {handleVideoRendering} from '../../components/utilities/handleVideoRendering';
-import vid1 from '../../assets/vid1.MP4';
-import vid2 from '../../assets/vid2.MP4';
-import vid3 from '../../assets/vid3.MP4';
-import vid4 from '../../assets/vid4.MP4';
 
-const arr1 = [vid1, vid2, vid3, vid4];
+const arr1 = [
+  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid1.mp4?alt=media&token=625ae518-3930-4f2a-b5e7-42eece32a01c',
+  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid2.mp4?alt=media&token=96ba1614-3623-4c5f-aaa9-961183171865',
+  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid3.mp4?alt=media&token=04508181-bebf-4699-8a4a-1480d90d93ef',
+  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid4.mp4?alt=media&token=0d1cda22-7bee-42a7-ab9d-ce1fe61ee0f7',
+];
 const Videos = () => {
   const [data, setData] = useState([]);
 
