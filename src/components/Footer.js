@@ -5,6 +5,7 @@ import Facebook from './utilities/logos/Facebook';
 import Instagram from './utilities/logos/Instagram';
 import Tiktok from './utilities/logos/Tiktok';
 import Whatsapp from './utilities/logos/Whatsapp';
+import Phone from './utilities/logos/Phone';
 
 const Footer = () => {
   return (
@@ -72,6 +73,14 @@ const Footer = () => {
                 <Whatsapp />
                 <span style={{fontSize: '.8rem'}} className="ml-2">
                   +8613738745657
+                </span>
+              </a>
+            </div>
+            <div className="phone mt-3">
+              <a rel="noreferrer" className="text-dark" href="tel:+48511961344">
+                <Phone />
+                <span style={{fontSize: '.8rem'}} className="ml-2">
+                  +48511961344
                 </span>
               </a>
             </div>
