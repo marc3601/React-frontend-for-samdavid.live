@@ -7,6 +7,8 @@ const arr1 = [
   'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid2.mp4?alt=media&token=96ba1614-3623-4c5f-aaa9-961183171865',
   'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid3.mp4?alt=media&token=04508181-bebf-4699-8a4a-1480d90d93ef',
   'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid4.mp4?alt=media&token=0d1cda22-7bee-42a7-ab9d-ce1fe61ee0f7',
+  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid5.mp4?alt=media&token=a60ce6c2-e76d-47ba-ad38-4a98b2184438',
+  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid6.mp4?alt=media&token=b5bed95d-3bad-42cc-b882-9d345afe60fd',
 ];
 const Videos = () => {
   const [data, setData] = useState([]);
