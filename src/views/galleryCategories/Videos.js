@@ -10,13 +10,38 @@ const arr1 = [
   'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid5.mp4?alt=media&token=a60ce6c2-e76d-47ba-ad38-4a98b2184438',
   'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid6.mp4?alt=media&token=b5bed95d-3bad-42cc-b882-9d345afe60fd',
 ];
+
 const Videos = () => {
   const [data, setData] = useState([]);
-
+  const [width, setWidth] = useState(0);
   useEffect(() => {
+    window.addEventListener('resize', () => {
+      setWidth(parseInt(window.innerWidth.toFixed(0)));
+    });
     setData(arr1);
     handleVideoRendering(data);
-  }, [data]);
+    pausePlayers();
+  }, [data, width]);
+
+  const pausePlayers = () => {
+    let players = document.getElementsByTagName('video');
+
+    if (players.length > 0) {
+      const allPlayers = Array.from(players);
+      allPlayers.forEach((plyr, id) => {
+        plyr.setAttribute('id', id);
+        plyr.addEventListener('playing', (e) => {
+          console.log('Event fired');
+          allPlayers.forEach((instance) => {
+            if (instance.id !== e.target.id) {
+              instance.pause();
+              instance.currentTime = 0;
+            }
+          });
+        });
+      });
+    }
+  };
 
   return (
     <Container>

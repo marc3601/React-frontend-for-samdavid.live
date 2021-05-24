@@ -11,6 +11,7 @@ export const handleVideoRendering = (input) => {
   const firstArrLenght = Math.round(lnght / 2);
   newArr = input.slice(0, firstArrLenght);
   newAr2 = input.slice(firstArrLenght, input.length);
+
   const controls = [
     'play-large', // The large play button in the center
     //'restart', // Restart playback
@@ -51,13 +52,14 @@ export const handleVideoRendering = (input) => {
       ],
     });
   });
+
   return (
     <>
       <Col sm={12} lg={6}>
         {source1.length > 0 &&
           source1.map((vid, i) => (
             <VideoContainer key={i}>
-              <Plyr source={vid} options={controls} />
+              <Plyr id={i} source={vid} options={controls} />
             </VideoContainer>
           ))}
       </Col>
@@ -65,7 +67,7 @@ export const handleVideoRendering = (input) => {
         {source2.length > 0 &&
           source2.map((vid, i) => (
             <VideoContainer key={i}>
-              <Plyr source={vid} options={controls} />
+              <Plyr id={i} source={vid} options={controls} />
             </VideoContainer>
           ))}
       </Col>
