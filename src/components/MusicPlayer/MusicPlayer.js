@@ -9,6 +9,7 @@ import TrackSymbol from './TrackSymbol';
 import Equilizer from './Equilizer';
 import TrackLoading from './TrackLoading';
 import RewindButton from './RewindButton';
+import Repeat from "./Repeat";
 
 const MusicPlayer = ({playlist, load, desc}) => {
   const [playIcon, setPlayIcon] = useState(true);
@@ -16,6 +17,8 @@ const MusicPlayer = ({playlist, load, desc}) => {
   const [currentTime, setCurrentTime] = useState('00:00');
   const [percentage, setPercentage] = useState(0);
   const [activeTrackID, setActiveTrackID] = useState(0);
+  const [loop, setLoop] = useState(false);
+  const [alertLoop, setAlertLoop] = useState(false);
   const [muted, setMuted] = useState(false);
   const [loading, setLoading] = useState(false);
   const volume = useRef(null);
@@ -24,6 +27,16 @@ const MusicPlayer = ({playlist, load, desc}) => {
   useEffect(() => {
     audioRef.current.volume = volume.current.value;
   }, []);
+
+  // Turn off autoplay notification after 2 seconds.
+  useEffect(() => {
+    const timed = setTimeout(()=>{
+      setAlertLoop(false);
+    },2000)
+    return () => {
+      clearTimeout(timed)
+    }
+  },[alertLoop])
 
   // Temporary solution to the NaN problem with percentage causing search input range thumb to stay in the middle.
   useEffect(() => {
@@ -96,6 +109,20 @@ const MusicPlayer = ({playlist, load, desc}) => {
         });
     }
   };
+
+
+  // Loop through tracks
+  const tracksLoop = () => {
+    setTimeout(()=> {
+      if (activeTrackID < playlist.length - 1) {
+        setActiveTrackID(activeTrackID + 1);
+        handleTrackRewind();
+      } else {
+        setActiveTrackID(0);
+        handleTrackRewind();
+      }
+    },500)
+  }
 
   return (
     <PlayerWrapper>
@@ -192,14 +219,9 @@ const MusicPlayer = ({playlist, load, desc}) => {
       </Player>
       <PlayList>
         <PlaylistHeader>
-          <PlaylistTitle>
-            {desc ? desc.title : 'Default playlist'}
-          </PlaylistTitle>
-          <PlaylistInfo>
-            {desc ? desc.desc : 'Default description'}
-          </PlaylistInfo>
+        {alertLoop && <LoopInfo>{loop? <p>Autoplay enabled</p> : <p>Autoplay disabled</p>}</LoopInfo>}
+        <Repeat loop={loop} setLoop={setLoop} alert={setAlertLoop} />
         </PlaylistHeader>
-
         <PlaylistItems>
           {!load ? (
             playlist.map((track, i) => {
@@ -242,6 +264,7 @@ const MusicPlayer = ({playlist, load, desc}) => {
         </PlaylistItems>
       </PlayList>
       <audio
+        preload="metadata"
         ref={audioRef}
         onLoadStart={() => setLoading(true)}
         onCanPlay={() => setLoading(false)}
@@ -250,8 +273,13 @@ const MusicPlayer = ({playlist, load, desc}) => {
           setAudioDuration(convertAudioDuration(audioRef.current.duration));
         }}
         onEnded={() => {
-          setPlayIcon(!playIcon);
-          audioRef.current.currentTime = 0;
+          audioRef.current.pause();
+          if (loop) {
+            tracksLoop();
+          } else {
+            setPlayIcon(!playIcon);
+            audioRef.current.currentTime = 0;
+          }
         }}
         src={
           !load && playlist.length > 0
@@ -482,25 +510,42 @@ const PlaylistHeader = styled.header`
   position: relative;
   z-index: 1;
   background: black;
-  padding: 2.2rem;
+  padding:.8rem;
   color: #f2f2f2;
-  text-align: center;
   -webkit-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.27);
   -moz-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.27);
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.27);
+  .repeat {
+    border-radius:5px;
+    width: fit-content;
+    padding: 5px;
+    position: relative;
+    cursor: pointer;
+    transition: .2s ease-out;
+  }
+  #repeat{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-38%, 10%);
+  }
   @media (max-width: 579px) {
-    padding: 1.4rem;
+    svg {
+      width:25px;
+      height:25px;
+    }
   }
 `;
 
-const PlaylistTitle = styled.h1`
-  font-size: 1.6rem;
-  line-height: 1em;
-  margin: 0 0 0.975rem;
-  margin-top: 0;
-`;
-
-const PlaylistInfo = styled.p``;
+const LoopInfo = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 50%;
+  text-align: center;
+  color:white;
+`
 
 const PlaylistItems = styled.ol`
   position: relative;
@@ -545,10 +590,9 @@ const PlaylistTrack = styled.li`
   ${(props) =>
     props.isActive &&
     `background: rgb(0,0,0);
-background: -moz-linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);
-background: -webkit-linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);
-background: linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);`};
-
+     background: -moz-linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);
+     background: -webkit-linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);
+     background: linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(173,14,14,1) 100%);`};
   @media (max-width: 579px) {
     padding: 1rem 1rem;
   }
