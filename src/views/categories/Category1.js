@@ -36,7 +36,6 @@ const Category1 = () => {
         <MusicPlayer
           playlist={data}
           load={loading}
-          desc={{ title: "Remixes", desc: "Description here" }}
           W
         />
       }

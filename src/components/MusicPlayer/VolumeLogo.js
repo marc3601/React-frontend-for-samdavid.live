@@ -3,6 +3,7 @@ import React from "react";
 const VolumeLogo = () => {
   return (
     <svg id="volume" height="40px" width="40px" viewBox="0 0 35 35">
+      <title>volume</title>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
