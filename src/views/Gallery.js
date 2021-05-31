@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, Row, Col, Card} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
+import "./Music.css"
 import cat1 from '../assets/sam9.jpg';
 import cat2 from '../assets/sam3.jpg';
 const Gallery = () => {
@@ -16,10 +17,10 @@ const Gallery = () => {
       <Row className="justify-content-md-center">
         {categories.map((item, i) => (
           <Col className="position-relative" key={i} id={i} xs={12} lg={6}>
-            <Card className="position-relative mb-4">
+            <Card className="position-relative mb-4" style={{borderRadius: "20px"}}>
               <Link
-                style={{textDecoration: 'none'}}
-                className="overflow-hidden text-center"
+                style={{textDecoration: 'none',borderRadius: "20px"}}
+                className="overflow-hidden text-center demo"
                 to={'/gallery/' + item.link}
               >
                 <HeadingContainer image={item.image}>

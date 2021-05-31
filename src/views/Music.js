@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, Row, Col, Card} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
+import "./Music.css"
 import cat1 from '../assets/category1.jpg';
 import cat2 from '../assets/category2.jpg';
 import cat3 from '../assets/category3.jpg';
@@ -22,10 +23,10 @@ const Music = () => {
       <Row className="justify-content-md-center">
         {categories.map((item, i) => (
           <Col className="position-relative" key={i} id={i} xs={12} lg={6}>
-            <Card className="position-relative mb-4">
+            <Card className="position-relative mb-4 " style={{borderRadius: "20px"}}>
               <Link
-                style={{textDecoration: 'none'}}
-                className="overflow-hidden text-center"
+                style={{textDecoration: 'none',borderRadius: "20px"}}
+                className="overflow-hidden text-center demo"
                 to={'/music/' + item.link}
               >
                 <HeadingContainer image={item.image}>
@@ -70,6 +71,7 @@ const HeadingContainer = styled.div`
   background-image: url(${(props) => props.image});
   height: 400px;
   text-align: center;
+  border-radius: 20px;
   transition: all 0.5s;
   &:hover ${Heading} {
     font-size: 3.2rem;
@@ -86,3 +88,8 @@ const HeadingContainer = styled.div`
     background-position: top;
   }
 `;
+
+const TestWrap = styled.div`
+ -webkit-box-shadow: 5px 5px 0px 0px #289FED, 10px 10px 0px 0px #5FB8FF, 15px 15px 0px 0px #A1D8FF, 20px 20px 0px 0px #CAE6FF, 25px 25px 0px 0px #E1EEFF, 5px 5px 15px 5px rgba(0,0,0,0); 
+  box-shadow: 5px 5px 0px 0px #289FED, 10px 10px 0px 0px #5FB8FF, 15px 15px 0px 0px #A1D8FF, 20px 20px 0px 0px #CAE6FF, 25px 25px 0px 0px #E1EEFF, 5px 5px 15px 5px rgba(0,0,0,0);
+`
