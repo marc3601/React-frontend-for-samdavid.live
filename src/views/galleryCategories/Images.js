@@ -50,6 +50,7 @@ const Images = () => {
                 lg={6}
               >
                 <Image
+                  loading="lazy"
                   onLoadedDataCapture={() => console.log('LOADED')}
                   className="w-100 pb-3"
                   src={image.imageSrc}
