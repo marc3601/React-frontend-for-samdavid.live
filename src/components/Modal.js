@@ -34,19 +34,29 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img`
-  width: 60vw;
-  @media (max-width: 1200px) {
-    width: 70vw;
+ 
+ @media (min-width: 1100px) {
+    padding: 0;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100vh;
+    height: auto;
   }
-  @media (max-width: 992px) {
-    width: 80vw;
+  @media (max-width: 768px) and (orientation: landscape){
+    padding: 0;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100vh;
+    height: auto;
   }
   @media (max-width: 768px) {
     width: 85vw;
   }
   @media (max-width: 576px) {
     width: 95vw;
-  }
+  } 
 `;
 
 Image.defaultProps = {
