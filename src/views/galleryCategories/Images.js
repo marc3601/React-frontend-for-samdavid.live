@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {Container, Row, Col, Image} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Image } from 'react-bootstrap';
 import Modal from '../../components/Modal';
-import {db} from '../../firebase';
+import { db } from '../../firebase';
 
 const Images = () => {
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ const Images = () => {
           <Row>
             {images.map((image, i) => (
               <Col
-                style={{cursor: 'pointer'}}
+                style={{ cursor: 'pointer' }}
                 onClick={modalHandlr}
                 id={i}
                 key={i}
