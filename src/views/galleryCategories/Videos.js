@@ -1,31 +1,51 @@
-import React, {useState, useEffect} from 'react';
-import {Container, Row, Col} from 'react-bootstrap';
-import {handleVideoRendering} from '../../components/utilities/handleVideoRendering';
-
-const arr1 = [
-  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid1.mp4?alt=media&token=625ae518-3930-4f2a-b5e7-42eece32a01c',
-  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid2.mp4?alt=media&token=96ba1614-3623-4c5f-aaa9-961183171865',
-  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid3.mp4?alt=media&token=04508181-bebf-4699-8a4a-1480d90d93ef',
-  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid4.mp4?alt=media&token=0d1cda22-7bee-42a7-ab9d-ce1fe61ee0f7',
-  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid5.mp4?alt=media&token=a60ce6c2-e76d-47ba-ad38-4a98b2184438',
-  'https://firebasestorage.googleapis.com/v0/b/dj-admin-e66f0.appspot.com/o/videos_temp%2Fvid6.mp4?alt=media&token=b5bed95d-3bad-42cc-b882-9d345afe60fd',
-];
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { handleVideoRendering } from '../../components/utilities/handleVideoRendering';
+import { db } from '../../firebase';
 
 const Videos = () => {
+  const [loading, setLoading] = useState(true);
+  const [videos, setVideos] = useState([]);
   const [data, setData] = useState([]);
   const [width, setWidth] = useState(0);
+  let storedVideos = [];
+  const downloadVideos = (category) => {
+    setLoading(true);
+    db.collection(category)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          storedVideos.push(doc.data());
+        });
+      })
+      .finally(() => {
+        setVideos(storedVideos.map(item => item.imageSrc));
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    window.addEventListener('resize', () => {
-      setWidth(parseInt(window.innerWidth.toFixed(0)));
-    });
-    setData(arr1);
-    handleVideoRendering(data);
-    pausePlayers();
-  }, [data, width]);
+    const unsubscribe = () => {
+      downloadVideos("videos");
+    }
+    return unsubscribe();
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = () => {
+      window.addEventListener('resize', () => {
+        setWidth(parseInt(window.innerWidth.toFixed(0)));
+      });
+      setData(videos);
+      handleVideoRendering(data);
+      pausePlayers();
+    }
+    return unsubscribe();
+
+  }, [data, width, loading]);
 
   const pausePlayers = () => {
     let players = document.getElementsByTagName('video');
-
     if (players.length > 0) {
       const allPlayers = Array.from(players);
       allPlayers.forEach((plyr, id) => {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Card,
@@ -11,14 +11,16 @@ import {
   Tab,
   Tabs,
 } from 'react-bootstrap';
-import {storageRef, db} from '../firebase';
+import { storageRef, db } from '../firebase';
 import ListItems from '../components/ListItems';
+import ListItemsVideo from "../components/ListItemsVideo";
 import AdminImages from '../components/AdminImages';
 import QuestionMark from '../components/utilities/logos/QuestionMark';
 import './Admin.css';
-import {getDateTime} from '../components/utilities/getDateTime';
-import {handleImageUpload} from '../components/utilities/mainFunctions';
-import {handleMusicUpload} from '../components/utilities/mainFunctions';
+import { getDateTime } from '../components/utilities/getDateTime';
+import { handleImageUpload } from '../components/utilities/mainFunctions';
+import { handleMusicUpload } from '../components/utilities/mainFunctions';
+import { handleVideoUpload } from '../components/utilities/mainFunctions';
 import setTableCategoryName from '../components/utilities/setTableCategoryName';
 import setUserChoice from '../components/utilities/setUserChoice';
 import getFileDuration from '../components/utilities/getFileDuration';
@@ -38,10 +40,12 @@ const Admin = () => {
   const [category, setCategory] = useState('remixes');
   const [music, setMusic] = useState([]);
   const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [key, setKey] = useState('music');
   let container = [];
   let storedImages = [];
+  let storedVideos = [];
 
   const handleMusicDelete = (item, disable) => {
     disable(true);
@@ -93,6 +97,32 @@ const Admin = () => {
       });
   };
 
+  const handleVideoDelete = (item, disable) => {
+    disable(true);
+    const deleteRef = storageRef.child(`videos/${item.name}`);
+    deleteRef
+      .delete()
+      .then(() => {
+        db.collection('videos')
+          .doc(item.name)
+          .delete()
+          .then(() => {
+            downloadVideos('videos');
+            disable(false);
+          });
+      })
+      .catch((e) => {
+        console.log(e);
+        setAlert(true);
+        setMessage("It appears there's no such file in database!");
+        disable(false);
+        setTimeout(() => {
+          setAlert(false);
+          setMessage('');
+        }, 2000);
+      });
+  };
+
   const downloadMusic = (location) => {
     setLoading(true);
     db.collection(location)
@@ -123,9 +153,25 @@ const Admin = () => {
       });
   };
 
+  const downloadVideos = (category) => {
+    setLoading(true);
+    db.collection(category)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          storedVideos.push(doc.data());
+        });
+      })
+      .finally(() => {
+        setVideos(storedVideos);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     key === 'music' && downloadMusic(category);
     key === 'images' && downloadImages('images');
+    key === 'videos' && downloadVideos('videos')
   }, [category, key]);
 
   return (
@@ -164,7 +210,7 @@ const Admin = () => {
                     variant="info"
                   >
                     <Alert.Heading>
-                      Instruction. (Work in progress)
+                      Instruction.
                     </Alert.Heading>
                     <ul
                       style={{
@@ -192,17 +238,6 @@ const Admin = () => {
                       <li>
                         Click delete button next to the file you want to remove.
                       </li>
-                      <br />
-                      <ul>
-                        <li>
-                          You may expierience some random crashes of this system
-                          and it is expected at this point. (Simple refresh will
-                          bring things back to normal) There' still some work to
-                          do with stability and error handling of this system.
-                          Will fix that soon. 🙂
-                        </li>
-                        <li>More features soon.</li>
-                      </ul>
                     </ul>
                   </Alert>
                 )}
@@ -275,26 +310,26 @@ const Admin = () => {
                             onClick={
                               !isUploading
                                 ? (e) =>
-                                    handleMusicUpload(
-                                      e,
-                                      fileType,
-                                      fileName,
-                                      duration,
-                                      setAlert,
-                                      setCompleted,
-                                      uploadTime,
-                                      storageRef,
-                                      category,
-                                      file,
-                                      setProgress,
-                                      setIsUploading,
-                                      setMessage,
-                                      db,
-                                      setDuration,
-                                      setFileName,
-                                      downloadMusic,
-                                      setFileType
-                                    )
+                                  handleMusicUpload(
+                                    e,
+                                    fileType,
+                                    fileName,
+                                    duration,
+                                    setAlert,
+                                    setCompleted,
+                                    uploadTime,
+                                    storageRef,
+                                    category,
+                                    file,
+                                    setProgress,
+                                    setIsUploading,
+                                    setMessage,
+                                    db,
+                                    setDuration,
+                                    setFileName,
+                                    downloadMusic,
+                                    setFileType
+                                  )
                                 : undefined
                             }
                             className="mt-4"
@@ -419,24 +454,24 @@ const Admin = () => {
                             onClick={
                               !isUploading
                                 ? (e) =>
-                                    handleImageUpload(
-                                      e,
-                                      fileType,
-                                      fileName,
-                                      setAlert,
-                                      setCompleted,
-                                      uploadTime,
-                                      storageRef,
-                                      file,
-                                      setProgress,
-                                      setIsUploading,
-                                      setMessage,
-                                      db,
-                                      setDuration,
-                                      setFileName,
-                                      setFileType,
-                                      downloadImages
-                                    )
+                                  handleImageUpload(
+                                    e,
+                                    fileType,
+                                    fileName,
+                                    setAlert,
+                                    setCompleted,
+                                    uploadTime,
+                                    storageRef,
+                                    file,
+                                    setProgress,
+                                    setIsUploading,
+                                    setMessage,
+                                    db,
+                                    setDuration,
+                                    setFileName,
+                                    setFileType,
+                                    downloadImages
+                                  )
                                 : undefined
                             }
                             className="mt-4"
@@ -497,8 +532,143 @@ const Admin = () => {
               setIsUploading={setIsUploading}
             />
           </Tab>
-          <Tab eventKey="videos" title="Videos" disabled>
-            Videos
+          <Tab eventKey="videos" title="Videos" disabled={isUploading}>
+            <p className="lead pt-3 font-weight-bold text-light">
+              Video upload system
+            </p>
+            <Row className="d-flex justify-content-center">
+              <Col lg={6}>
+                <Card className="mt-2 shadow p-3 mb-5 bg-white rounded">
+                  <Card.Title className="text-center mt-2 mb-3" md={4}>
+                    Choose file to upload.
+                  </Card.Title>
+                  <Card.Body>
+                    <Row>
+                      <Col className="mx-auto">
+                        <Form
+                          className="text-center"
+                          action="/data"
+                          method="post"
+                          encType="multipart/form-data"
+                        >
+                          <Form.Group>
+                            <Form.File
+                              disabled={isUploading}
+                              type="file"
+                              name="video"
+                              id="video"
+                              required
+                              className="mt-4"
+                              onChange={(e) => {
+                                setAlert(false);
+                                setMessage(false);
+                                setFileName('');
+                                setFileType(null);
+                                const file = e.target.files[0];
+                                setFile(file);
+                                if (file !== null && file !== undefined) {
+                                  const time = getDateTime();
+                                  setUploadTime(time);
+                                  checkFileType(
+                                    file,
+                                    setFileType,
+                                    setFileName,
+                                    'mp4'
+                                  );
+                                }
+                              }}
+                            />
+                            <ProgressBar className="mt-5" now={progress} />
+                          </Form.Group>
+                          <Button
+                            onClick={
+                              !isUploading
+                                ? (e) =>
+                                  handleVideoUpload(
+                                    e,
+                                    fileType,
+                                    fileName,
+                                    setAlert,
+                                    setCompleted,
+                                    uploadTime,
+                                    storageRef,
+                                    file,
+                                    setProgress,
+                                    setIsUploading,
+                                    setMessage,
+                                    db,
+                                    setDuration,
+                                    setFileName,
+                                    setFileType,
+                                    downloadVideos
+                                  )
+                                : undefined
+                            }
+                            className="mt-4"
+                            variant="success"
+                          >
+                            Upload
+                          </Button>
+                          <Alert className="mt-3" variant="danger" show={alert}>
+                            {message}
+                          </Alert>
+                          <Alert
+                            className="mt-3"
+                            variant="success"
+                            show={completed}
+                          >
+                            Upload completed
+                          </Alert>
+                        </Form>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={6}>
+                <Card className="mt-2 shadow p-3 mb-5 bg-white rounded">
+                  <Card.Title className="text-center mt-3 mb-3">
+                    Detected metadata.
+                  </Card.Title>
+                  <Card.Body>
+                    <Row>
+                      <Col className="text-left">
+                        <p className="lead">
+                          <span className="font-weight-bold">Title: </span>
+                          <input
+                            minLength={5}
+                            maxLength={100}
+                            className="editable_title"
+                            type="text"
+                            value={fileName}
+                            onChange={(e) => setFileName(e.target.value)}
+                            disabled={isUploading}
+                          />
+                        </p>
+                        <p className="lead">
+                          <span className="font-weight-bold">File type: </span>
+                          {fileType}
+                        </p>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12} className="pb-5">
+                <h3 className="display-5 pt-3 mb-4 text-light">
+                  List of Videos
+                </h3>
+                <ListItemsVideo
+                  isUploading={isUploading}
+                  playlist={videos}
+                  load={loading}
+                  handleDelete={handleVideoDelete}
+                  setIsUploading={setIsUploading}
+                />
+              </Col>
+            </Row>
           </Tab>
         </Tabs>
       </Container>

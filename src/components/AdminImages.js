@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Row, Col, Image, Modal, Button, Alert} from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Row, Col, Image, Modal, Button, Alert } from 'react-bootstrap';
 import './AdminImages.css';
 import Delete from '../components/utilities/logos/Delete';
 const AdminImages = ({
@@ -16,7 +16,7 @@ const AdminImages = ({
     <>
       {alert && (
         <Alert onClose={() => setAlert(false)} dismissible variant="info">
-          <Alert.Heading>Instruction. (Work in progress)</Alert.Heading>
+          <Alert.Heading>Instruction.</Alert.Heading>
           <ul
             style={{
               paddingLeft: 0,
