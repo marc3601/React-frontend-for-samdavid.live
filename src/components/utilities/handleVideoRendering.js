@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {Col} from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import Plyr from 'plyr-react';
 import 'plyr-react/dist/plyr.css';
 export const handleVideoRendering = (input) => {
@@ -11,7 +11,6 @@ export const handleVideoRendering = (input) => {
   const firstArrLenght = Math.round(lnght / 2);
   newArr = input.slice(0, firstArrLenght);
   newAr2 = input.slice(firstArrLenght, input.length);
-
   const controls = [
     'play-large', // The large play button in the center
     //'restart', // Restart playback
@@ -29,6 +28,7 @@ export const handleVideoRendering = (input) => {
     'airplay', // Airplay (currently Safari only)
     'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
     'fullscreen', // Toggle fullscreen
+
   ];
   newArr.forEach((item) => {
     source1.push({
@@ -59,7 +59,10 @@ export const handleVideoRendering = (input) => {
         {source1.length > 0 &&
           source1.map((vid, i) => (
             <VideoContainer key={i}>
-              <Plyr id={i} source={vid} options={controls} />
+              <Plyr id={i} source={vid} options={{
+                controls, resetOnEnd: true,
+                invertTime: false
+              }} />
             </VideoContainer>
           ))}
       </Col>
@@ -67,7 +70,10 @@ export const handleVideoRendering = (input) => {
         {source2.length > 0 &&
           source2.map((vid, i) => (
             <VideoContainer key={i}>
-              <Plyr id={i} source={vid} options={controls} />
+              <Plyr id={i} source={vid} options={controls, {
+                controls, resetOnEnd: true,
+                invertTime: false
+              }} />
             </VideoContainer>
           ))}
       </Col>

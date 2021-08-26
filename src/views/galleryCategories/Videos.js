@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { handleVideoRendering } from '../../components/utilities/handleVideoRendering';
 import { db } from '../../firebase';
@@ -7,7 +7,7 @@ const Videos = () => {
   const [loading, setLoading] = useState(true);
   const [videos, setVideos] = useState([]);
   const [data, setData] = useState([]);
-  const [width, setWidth] = useState(0);
+
   let storedVideos = [];
   const downloadVideos = (category) => {
     setLoading(true);
@@ -33,16 +33,14 @@ const Videos = () => {
 
   useEffect(() => {
     const unsubscribe = () => {
-      window.addEventListener('resize', () => {
-        setWidth(parseInt(window.innerWidth.toFixed(0)));
-      });
       setData(videos);
-      handleVideoRendering(data);
       pausePlayers();
     }
     return unsubscribe();
 
-  }, [data, width, loading]);
+  }, [data, loading]);
+
+
 
   const pausePlayers = () => {
     let players = document.getElementsByTagName('video');
@@ -51,7 +49,14 @@ const Videos = () => {
       allPlayers.forEach((plyr, id) => {
         plyr.setAttribute('id', id);
         plyr.addEventListener('playing', (e) => {
-          console.log('Event fired');
+          allPlayers.forEach((instance) => {
+            if (instance.id !== e.target.id) {
+              instance.pause();
+              instance.currentTime = 0;
+            }
+          });
+        });
+        plyr.addEventListener('waiting', (e) => {
           allPlayers.forEach((instance) => {
             if (instance.id !== e.target.id) {
               instance.pause();
