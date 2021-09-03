@@ -1,6 +1,6 @@
 import React from 'react';
-import {Container, Image, Button, Row, Col} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import { Container, Image, Button, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import OwlCarousel from 'react-owl-carousel';
 import '../assets/dist/assets/owl.carousel.min.css';
 import '../assets/dist/assets/owl.theme.default.min.css';
@@ -10,7 +10,7 @@ import img3 from '../assets/sm3.jpg';
 import img4 from '../assets/sm4.jpeg';
 import img5 from '../assets/sm5.jpeg';
 import './Gallery.css';
-const Gallery = ({width}) => {
+const Gallery = ({ width }) => {
   const options = {
     responsive: {
       0: {
@@ -33,9 +33,8 @@ const Gallery = ({width}) => {
   return (
     <Container
       fluid
-      className={`main_gallery ${
-        width > 1000 ? 'p-5' : width > 750 ? 'p-4' : 'p-3'
-      }`}
+      className={`main_gallery ${width > 1000 ? 'p-5' : width > 750 ? 'p-4' : 'p-3'
+        }`}
     >
       <h2 className="custom_h2 lead display-3 text-light text-center pt-3 pb-5">
         My work
@@ -59,9 +58,9 @@ const Gallery = ({width}) => {
       </OwlCarousel>
       <Row>
         <Col className="text-center">
-          <Link to="/gallery">
+          <Link to="/music">
             <Button className="custom_btn mb-5" variant="danger" size="lg">
-              See more
+              Explore music
             </Button>
           </Link>
         </Col>

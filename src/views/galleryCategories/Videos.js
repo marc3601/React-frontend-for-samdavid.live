@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { handleVideoRendering } from '../../components/utilities/handleVideoRendering';
 import { db } from '../../firebase';
