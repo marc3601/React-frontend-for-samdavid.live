@@ -13,9 +13,9 @@ const Heading = () => {
             Just Feel the Heat, and move to the beat.
           </p>
         </div>
-        <Link to="/music">
+        <Link to="/gallery">
           <Button className="custom_btn mb-5" variant="danger" size="lg">
-            Explore Music
+            Gallery
           </Button>
         </Link>
       </Container>
