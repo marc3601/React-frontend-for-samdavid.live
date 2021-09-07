@@ -1,26 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Zilla+Slab+Highlight:wght@700&display=swap");
-#bgc_container {
-  background-image: url("../assets/main.jpg");
-  background-size: cover;
-  background-position: top;
-  min-height: 60vh;
-  position: relative;
-}
 
 .custom_btn {
   border-radius: 29px;
   padding-left: 4rem;
   padding-right: 4rem;
-  margin-top: 10vh;
   position: relative;
   z-index: 100;
+  margin: 10px 0;
 }
 
 .custom_desc {
   font-size: 1.5rem;
 }
 
-.cover {
+/* .cover {
   position: absolute;
   background-image: url("../assets/cover.svg");
   bottom: -1px;
@@ -28,6 +21,12 @@
   z-index: 10;
   width: 100%;
   background-size: 100% 2.5vw;
+} */
+
+.buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .phrase {

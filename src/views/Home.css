@@ -1,0 +1,8 @@
+#bgc_container {
+    background-image: url("../assets/main.jpg");
+    background-color: black;
+    background-size: cover;
+    background-position: top;
+    min-height: 60vh;
+    position: relative;
+  }

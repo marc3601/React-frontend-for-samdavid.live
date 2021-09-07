@@ -11,6 +11,7 @@ const Phone = () => {
       viewBox="0 0 27.442 27.442"
       width="25px"
       height="25px"
+      fill="white"
     >
       <g>
         <path
