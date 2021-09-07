@@ -1,37 +1,40 @@
 import React from 'react';
-import {Container, Row, Col, Card} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import "./Music.css"
 import cat1 from '../assets/sam9.jpg';
 import cat2 from '../assets/sam3.jpg';
+import "./Gallery.css"
 const Gallery = () => {
   const categories = [
-    {title: 'Images', image: cat1, link: 'images'},
-    {title: 'Videos', image: cat2, link: 'videos'},
+    { title: 'Images', image: cat1, link: 'images' },
+    { title: 'Videos', image: cat2, link: 'videos' },
   ];
 
   return (
-    <Container className="pb-4">
-      <h2 className="display-4 mb-4 mt-4 text-center text-dark">Gallery</h2>
-      <Row className="justify-content-md-center">
-        {categories.map((item, i) => (
-          <Col className="position-relative" key={i} id={i} xs={12} lg={6}>
-            <Card className="position-relative mb-4" style={{borderRadius: "20px"}}>
-              <Link
-                style={{textDecoration: 'none',borderRadius: "20px"}}
-                className="overflow-hidden text-center demo"
-                to={'/gallery/' + item.link}
-              >
-                <HeadingContainer image={item.image}>
-                  <HeadingOverlay />
-                  <Heading>{item.title}</Heading>
-                </HeadingContainer>
-              </Link>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+    <Container>
+      <div className="resizer">
+        <h2 className="display-4 mb-4 mt-4 text-center text-dark">Gallery</h2>
+        <Row className="justify-content-md-center">
+          {categories.map((item, i) => (
+            <Col className="position-relative" key={i} id={i} xs={12} lg={6}>
+              <Card className="position-relative mb-4" style={{ borderRadius: "20px" }}>
+                <Link
+                  style={{ textDecoration: 'none', borderRadius: "20px" }}
+                  className="overflow-hidden text-center demo"
+                  to={'/gallery/' + item.link}
+                >
+                  <HeadingContainer image={item.image}>
+                    <HeadingOverlay />
+                    <Heading>{item.title}</Heading>
+                  </HeadingContainer>
+                </Link>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </div>
     </Container>
   );
 };

@@ -1,19 +1,19 @@
 import React from 'react';
-import {Container, Row, Col, Image} from 'react-bootstrap';
+import { Container, Row, Col, Image } from 'react-bootstrap';
 import main_logo from '../assets/logo.png';
 import Facebook from './utilities/logos/Facebook';
 import Instagram from './utilities/logos/Instagram';
 import Tiktok from './utilities/logos/Tiktok';
 import Whatsapp from './utilities/logos/Whatsapp';
 import Phone from './utilities/logos/Phone';
-
+import "./Footer.css"
 const Footer = () => {
   return (
     <footer className="footer">
       <Container
         fluid
         className="p-4"
-        style={{boxShadow: 'inset 0px 4px 2px -3px rgba(0,0,0,0.72)'}}
+        style={{ boxShadow: 'inset 0px 4px 2px -3px rgba(0,0,0,0.72)' }}
       >
         <h4 className="display-5 text-center">Contact</h4>
         <Row>
@@ -32,7 +32,7 @@ const Footer = () => {
                 href="https://www.facebook.com/DjSamDavid1"
               >
                 <Facebook />
-                <span style={{fontSize: '.8rem'}} className="ml-2">
+                <span style={{ fontSize: '.8rem' }} className="ml-2 white_link">
                   DjSamDavid1
                 </span>
               </a>
@@ -45,7 +45,7 @@ const Footer = () => {
                 href="https://www.instagram.com/djsamdavid619/"
               >
                 <Instagram />
-                <span style={{fontSize: '.8rem'}} className="ml-2">
+                <span style={{ fontSize: '.8rem' }} className="ml-2 white_link">
                   djsamdavid619
                 </span>
               </a>
@@ -58,7 +58,7 @@ const Footer = () => {
                 href="https://vm.tiktok.com/ZMeaCUXr6/"
               >
                 <Tiktok />
-                <span style={{fontSize: '.8rem'}} className="ml-2">
+                <span style={{ fontSize: '.8rem' }} className="ml-2 white_link">
                   djsamdavid
                 </span>
               </a>
@@ -71,7 +71,7 @@ const Footer = () => {
                 href="https://wa.me/8613738745657"
               >
                 <Whatsapp />
-                <span style={{fontSize: '.8rem'}} className="ml-2">
+                <span style={{ fontSize: '.8rem' }} className="ml-2 white_link">
                   +8613738745657
                 </span>
               </a>
@@ -79,7 +79,7 @@ const Footer = () => {
             <div className="phone mt-3">
               <a rel="noreferrer" className="text-dark" href="tel:+48511961344">
                 <Phone />
-                <span style={{fontSize: '.8rem'}} className="ml-2">
+                <span style={{ fontSize: '.8rem' }} className="ml-2 white_link">
                   +48511961344
                 </span>
               </a>
