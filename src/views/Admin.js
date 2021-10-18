@@ -25,6 +25,7 @@ import setTableCategoryName from '../components/utilities/setTableCategoryName';
 import setUserChoice from '../components/utilities/setUserChoice';
 import getFileDuration from '../components/utilities/getFileDuration';
 import checkFileType from '../components/utilities/checkFileType';
+
 const Admin = () => {
   const [file, setFile] = useState(null);
   const [alert, setAlert] = useState(false);
@@ -672,13 +673,15 @@ const Admin = () => {
           </Tab>
         </Tabs>
       </Container>
-      {key === 'music' && (
-        <div className="question" onClick={() => setAlertD(!alertD)}>
-          <QuestionMark />
-          <p className="instr">Instructions</p>
-        </div>
-      )}
-    </Container>
+      {
+        key === 'music' && (
+          <div className="question" onClick={() => setAlertD(!alertD)}>
+            <QuestionMark />
+            <p className="instr">Instructions</p>
+          </div>
+        )
+      }
+    </Container >
   );
 };
 
